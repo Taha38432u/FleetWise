@@ -1,193 +1,158 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import {
-  Paper,
-  Title,
-  Text,
-  Container,
-  Group,
-  Box,
-  useMantineTheme,
-  LoadingOverlay,
-} from "@mantine/core";
+import { Paper, Button, LoadingOverlay } from "@mantine/core";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "@/components/common/Input/CustomInput";
-import CustomButton from "@/components/common/Button/CustomButton";
-import { IconWallet, IconMail, IconUser } from "@tabler/icons-react";
+import { IconUser, IconMail, IconLock, IconTruck, IconBrandGoogle, IconBrandGithub } from "@tabler/icons-react";
 import { useSignUp } from "@/api/authentication/hooks/useSignUp";
 import { toast } from "react-toastify";
 
 // Validation schema
 const SignupSchema = Yup.object().shape({
   name: Yup.string().required("Full name is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string().min(6, "Password too short").required("Password is required"),
 });
 
 export default function SignupPage() {
-  const theme = useMantineTheme();
+  const [opened, setOpened] = useState(false);
   const { mutate: signUpUser, isPending } = useSignUp();
 
-  const handleSignup = (values: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
+  const handleSignup = (values: { name: string; email: string; password: string }) => {
     signUpUser(values, {
       onSuccess: () => {
-        toast.success("Account created successfully!, Plese Verify Your Email");
+        toast.success("Account created successfully! Please verify your email");
       },
-      onError: (error: any) => {
-        toast.error(error?.message || "Failed to create account");
+      onError: (err: any) => {
+        toast.error(err?.message || "Failed to create account");
       },
     });
   };
 
   return (
-    <Container size={500} my={20}>
-      {/* Logo Section */}
-      <Box style={{ display: "flex", justifyContent: "center" }}>
-        <Box
-          style={{
-            background: `linear-gradient(135deg, ${theme.colors.blue[6]} 0%, ${theme.colors.cyan[6]} 100%)`,
-            borderRadius: "50%",
-            padding: 16,
-            boxShadow: "0 8px 32px rgba(0, 98, 255, 0.2)",
-          }}
-        >
-          <IconWallet size={48} stroke={1.5} color="white" />
-        </Box>
-      </Box>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-12 pt-12">
+          <div className="inline-flex items-center justify-center gap-3 mb-3">
+            <div className="bg-gradient-to-br from-blue-600 to-cyan-500 p-3 rounded-xl shadow-lg">
+              <IconTruck size={28} className="text-white" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-3xl font-black text-gray-900">FLEETWISE</h1>
+              <p className="text-sm font-semibold text-cyan-600 tracking-wide">FLEET MANAGEMENT</p>
+            </div>
+          </div>
+          <p className="text-gray-600 mt-2">Create your FleetWise account</p>
+        </div>
 
-      {/* Header Section */}
-      <Box ta="center" mb={40}>
-        <Title
-          order={1}
-          fw={800}
-          style={{
-            background: `linear-gradient(135deg, ${theme.colors.blue[6]} 0%, ${theme.colors.cyan[6]} 100%)`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          Expense Flow
-        </Title>
-        <Title order={2} mt="xs" fw={700} c="dark.4">
-          Create Your Account
-        </Title>
-        <Text
-          c="dimmed"
-          size="sm"
-          mt={8}
-          style={{ maxWidth: 300, margin: "0 auto" }}
-        >
-          Fill in the form below to create a new account and start managing your
-          expenses
-        </Text>
-      </Box>
+        {/* Signup Form */}
+        <Paper shadow="xl" radius="lg" p={30} className="relative bg-white">
+          <LoadingOverlay visible={isPending} overlayProps={{ radius: "lg" }} loaderProps={{ type: "bars" }} />
 
-      {/* Signup Form */}
-      <Paper
-        withBorder
-        shadow="xl"
-        p={40}
-        mt={20}
-        radius="lg"
-        style={{
-          background: "white",
-          border: `1px solid ${theme.colors.gray[2]}`,
-          position: "relative",
-        }}
-      >
-        <LoadingOverlay
-          visible={isPending}
-          overlayProps={{ radius: "lg", blur: 2 }}
-          loaderProps={{ type: "bars" }}
-        />
-
-        <Formik
-          initialValues={{ name: "", email: "", password: "" }}
-          validationSchema={SignupSchema}
-          onSubmit={handleSignup}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            values,
-            errors,
-            touched,
-            submitCount,
-          }) => (
-            <Form>
-              <Box mb="lg">
+          <Formik
+            initialValues={{ name: "", email: "", password: "" }}
+            validationSchema={SignupSchema}
+            onSubmit={handleSignup}
+          >
+            {({ handleChange, handleBlur, values, errors, touched, submitCount }) => (
+              <Form className="space-y-4">
                 <Input
                   id="name"
                   name="name"
                   label="Full Name"
-                  type="text"
                   placeholder="John Doe"
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={(touched.name || submitCount > 0) && errors.name}
-                  icon={<IconUser size={18} color={theme.colors.gray[5]} />}
+                  icon={<IconUser size={18} className="text-gray-400" />}
+                  size="md"
+                  radius="lg"
                 />
-              </Box>
 
-              <Box mb="lg">
                 <Input
                   id="email"
                   name="email"
-                  label="Email Address"
-                  type="email"
+                  label="Email"
                   placeholder="john@example.com"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={(touched.email || submitCount > 0) && errors.email}
-                  icon={<IconMail size={18} color={theme.colors.gray[5]} />}
+                  icon={<IconMail size={18} className="text-gray-400" />}
+                  size="md"
+                  radius="lg"
                 />
-              </Box>
 
-              <Box mb="lg">
                 <Input
                   id="password"
                   name="password"
                   label="Password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="••••••"
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={
-                    (touched.password || submitCount > 0) && errors.password
-                  }
-                  icon={<IconWallet size={18} color={theme.colors.gray[5]} />}
+                  error={(touched.password || submitCount > 0) && errors.password}
+                  icon={<IconLock size={18} className="text-gray-400" />}
+                  size="md"
+                  radius="lg"
                 />
-              </Box>
 
-              <Group justify="space-between" mt="lg" mb="xl">
-                <Link href="/login" style={{ textDecoration: "none" }}>
-                  <Text size="sm" c="blue.6" style={{ fontWeight: 500 }}>
-                    Already have an account? Sign in
-                  </Text>
-                </Link>
-              </Group>
+                {/* Normal Signup Button */}
+                <Button
+                  type="submit"
+                  loading={isPending}
+                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-semibold rounded-lg"
+                  size="lg"
+                >
+                  Sign Up
+                </Button>
 
-              <CustomButton type="submit" isLoading={isPending} variant="login">
-                {isPending ? "Creating Account..." : "Sign Up"}
-              </CustomButton>
-            </Form>
-          )}
-        </Formik>
-      </Paper>
-    </Container>
+                {/* Divider */}
+                <div className="relative flex items-center py-4">
+                  <div className="grow border-t border-gray-200"></div>
+                  <span className="shrink mx-4 text-sm text-gray-500">or sign up with</span>
+                  <div className="grow border-t border-gray-200"></div>
+                </div>
+
+                {/* OAuth Buttons - Using Mantine Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-12 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                  size="lg"
+                  leftSection={<IconBrandGoogle size={20} />}
+                >
+                  Sign up with Google
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-12 border-gray-300  hover:bg-gray-50 hover:border-gray-400 mt-3"
+                  size="lg"
+                  leftSection={<IconBrandGithub size={20} />}
+                >
+                  Sign up with GitHub
+                </Button>
+
+                {/* Login Link */}
+                <p className="text-center text-sm text-gray-500 mt-6">
+                  Already have an account?{" "}
+                  <Link href="/login" className="text-blue-600 font-medium hover:text-blue-700">
+                    Sign in
+                  </Link>
+                </p>
+              </Form>
+            )}
+          </Formik>
+        </Paper>
+      </div>
+    </div>
   );
 }

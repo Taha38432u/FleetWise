@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import Link from "next/link";
 import {
@@ -8,9 +8,7 @@ import {
   IconGasStation,
   // IconSpeed,
   IconChecklist,
-  IconMapPin,
   IconBell,
-  IconChartBar,
   IconUsers,
   IconBuilding,
   IconArrowRight,
@@ -112,19 +110,19 @@ export default function Home() {
             <div className="hidden md:flex items-center gap-8">
               <a
                 href="#features"
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
               >
                 Features
               </a>
               <a
                 href="#about"
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
               >
                 About
               </a>
               <a
                 href="#team"
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
               >
                 Team
               </a>
@@ -132,13 +130,13 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <Link
                 href="/login"
-                className="px-5 py-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                className="px-5 py-2 text-primary hover:text-primary-hover font-semibold transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 href="/signup"
-                className="px-5 py-2 bg-linear-to-r from-blue-600 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all shadow-md hover:shadow-lg"
+                className="px-5 py-2 bg-linear-to-r from-primary to-cyan-500 text-white font-semibold rounded-lg hover:from-primary-hover hover:to-cyan-600 transition-all shadow-md hover:shadow-lg"
               >
                 Get Started Free
               </Link>
@@ -147,14 +145,14 @@ export default function Home() {
 
           {/* Hero Content */}
           <div className="max-w-7xl mx-auto pt-16 pb-24 text-center">
-            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-blue-100 text-primary-hover rounded-full text-sm font-semibold">
               <IconCertificate size={16} />
               BS Computer Science Final Year Project
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 mb-6 leading-tight">
               AI-Powered{" "}
-              <span className="bg-linear-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-primary to-cyan-500 bg-clip-text text-transparent">
                 Predictive Fleet Management
               </span>
             </h1>
@@ -169,7 +167,7 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-8 mb-12">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">
+                  <div className="text-3xl font-bold text-primary">
                     {stat.value}
                   </div>
                   <div className="text-sm text-gray-600 font-medium">
@@ -183,14 +181,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
               <Link
                 href="/signup"
-                className="px-8 py-4 bg-linear-to-r from-blue-600 to-cyan-500 text-white font-semibold text-lg rounded-xl hover:from-blue-700 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-linear-to-r from-primary to-cyan-500 text-white font-semibold text-lg rounded-xl hover:from-primary-hover hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
                 Start Free Trial
                 <IconArrowRight size={20} />
               </Link>
               <Link
                 href="/login"
-                className="px-8 py-4 border-2 border-blue-200 text-blue-600 font-semibold text-lg rounded-xl hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                className="px-8 py-4 border-2 border-blue-200 text-primary font-semibold text-lg rounded-xl hover:bg-blue-50 hover:border-blue-300 transition-colors"
               >
                 Existing User? Sign In
               </Link>
@@ -272,7 +270,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 rounded-2xl p-8 text-white">
+            <div className="bg-linear-to-br from-primary to-cyan-500 rounded-2xl p-8 text-white">
               <h3 className="text-2xl font-bold mb-6">Project Information</h3>
               <div className="space-y-4">
                 <div>
@@ -328,7 +326,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-gray-900 mb-1">
                   {member.name}
                 </h3>
-                <div className="text-blue-600 font-medium mb-4">
+                <div className="text-primary font-medium mb-4">
                   {member.role}
                 </div>
                 <p className="text-gray-600 italic">
@@ -341,7 +339,7 @@ export default function Home() {
       </div>
 
       {/* Final CTA Section */}
-      <div className="py-20 bg-linear-to-r from-blue-600 to-cyan-500">
+      <div className="py-20 bg-linear-to-r from-primary to-cyan-500">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
             Ready to Transform Your Fleet Management?
@@ -352,7 +350,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/signup"
-              className="px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-xl hover:bg-gray-100 transition-colors shadow-xl"
+              className="px-8 py-4 bg-white text-primary font-bold text-lg rounded-xl hover:bg-gray-100 transition-colors shadow-xl"
             >
               Start Your Free Trial
             </Link>
