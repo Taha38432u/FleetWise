@@ -26,7 +26,7 @@ import clsx from "clsx";
 const menu = [
   { name: "Command Center", path: "/dashboard", icon: IconLayoutDashboard },
   { name: "Live Tracking", path: "/live-tracking", icon: IconMap2 },
-  { name: "Fleet Assets", path: "/vehicles", icon: IconCar },
+  { name: "Vehicles", path: "/vehicles", icon: IconCar },
   { name: "Drivers", path: "/drivers", icon: IconUsers },
   { name: "Dispatch", path: "/dispatch", icon: IconRoute },
   {

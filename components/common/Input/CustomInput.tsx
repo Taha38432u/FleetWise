@@ -199,7 +199,7 @@ const Input = ({
           disabled={disabled || loading}
           minLength={minLength}
           maxLength={maxLength}
-          required={required}
+          // required={required}
           className={`
             w-full h-12 px-4 border-2 rounded-lg
             ${
