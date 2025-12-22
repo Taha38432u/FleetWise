@@ -66,12 +66,12 @@ const Input = ({
   icon,
   description,
   warning = false,
-  // size = "md",
-  // variant = "default",
-  // radius = "md",
+  size, // eslint-disable-line @typescript-eslint/no-unused-vars
+  variant, // eslint-disable-line @typescript-eslint/no-unused-vars
+  radius, // eslint-disable-line @typescript-eslint/no-unused-vars
   showValidation = false,
   showCharacterCount = false,
-  // leftSection,
+  leftSection, // eslint-disable-line @typescript-eslint/no-unused-vars
   rightSection,
   autoFocus = false,
   loading = false,
@@ -133,7 +133,7 @@ const Input = ({
       <button
         type="button"
         onClick={() => setShowPassword((v) => !v)}
-        className="p-1 hover:bg-gray-100 rounded-md"
+        className="flex items-center justify-center p-1 hover:bg-gray-100 rounded-md transition-colors"
         disabled={disabled}
       >
         {showPassword ? (
@@ -143,6 +143,16 @@ const Input = ({
         )}
       </button>
     ) : null;
+
+  // Calculate right padding based on elements present
+  const rightElementsCount = [
+    validationIcon,
+    passwordToggle,
+    rightSection,
+  ].filter(Boolean).length;
+  // Base padding + (number of icons * icon width approx)
+  const paddingRight =
+    rightElementsCount > 0 ? `${rightElementsCount * 2.5 + 0.5}rem` : "";
 
   const actualType = type === "password" && showPassword ? "text" : type;
 
@@ -192,15 +202,21 @@ const Input = ({
           required={required}
           className={`
             w-full h-12 px-4 border-2 rounded-lg
-            ${hasError ? "border-red-500" : focused ? "border-blue-500" : "border-gray-300"}
+            ${
+              hasError
+                ? "border-red-500"
+                : focused
+                ? "border-blue-500"
+                : "border-gray-300"
+            }
             transition-all focus:outline-none
             ${getDefaultIcon() ? "pl-10" : ""}
-            ${validationIcon || passwordToggle || rightSection ? "pr-10" : ""}
           `}
+          style={{ paddingRight: paddingRight || undefined }}
           {...rest}
         />
 
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
           {validationIcon}
           {passwordToggle}
           {rightSection}

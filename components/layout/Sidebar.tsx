@@ -4,24 +4,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   IconLayoutDashboard,
-  IconCreditCard,
-  IconCategory,
   IconUser,
+  IconCar,
+  IconMap2,
+  IconTool,
+  IconReportAnalytics,
+  IconSettings,
   IconWallet,
-  IconPigMoney,
-  IconTarget,
-  IconRefresh,
 } from "@tabler/icons-react";
 import clsx from "clsx";
 
 const menu = [
   { name: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard },
-  { name: "Transactions", path: "/transactions", icon: IconCreditCard },
-  { name: "Categories", path: "/categories", icon: IconCategory },
-  { name: "Accounts", path: "/accounts", icon: IconUser },
-  { name: "Budgets", path: "/budgets", icon: IconPigMoney },
-  { name: "Goals", path: "/goals", icon: IconTarget },
-  { name: "Recurring", path: "/recurring", icon: IconRefresh },
+  { name: "Users", path: "/users", icon: IconUser },
+  { name: "Vehicles", path: "/categories", icon: IconCar },
+  { name: "Routes", path: "/routes", icon: IconMap2 },
+  { name: "Maintenance", path: "/maintenance", icon: IconTool },
+  { name: "Reports", path: "/reports", icon: IconReportAnalytics },
+  { name: "Settings", path: "/settings", icon: IconSettings },
 ];
 
 export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {

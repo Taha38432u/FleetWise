@@ -28,7 +28,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
     <header
       className={clsx(
         "w-full sticky top-0 z-40 flex items-center justify-between px-5 py-3 shadow-md transition-colors duration-300",
-        "bg-primary-light text-white" // Header is lighter than sidebar
+        "bg-primary text-white" // Header is lighter than sidebar
       )}
     >
       {/* Left: Menu Toggle + Title */}
