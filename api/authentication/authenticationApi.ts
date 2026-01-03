@@ -40,7 +40,7 @@ export const login = async (
 export const requestPasswordReset = async (data: RequestPasswordResetType) => {
     try {
         const response = await makeApiCall({
-            url: "auth/request-password-reset",
+            url: "auth/forgot-password",
             method: "POST",
             data,
         });
@@ -56,9 +56,9 @@ export const requestPasswordReset = async (data: RequestPasswordResetType) => {
 export const resetPassword = async (token: string, password: string) => {
     try {
         const response = await makeApiCall({
-            url: `auth/reset-password/${token}`,
+            url: `auth/reset-password`,
             method: "POST",
-            data: { password },
+            data: { token, newPassword: password },
         });
 
         return response;

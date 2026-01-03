@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LoadingOverlay, Button, Paper } from "@mantine/core";
 import { Formik, Form } from "formik";
@@ -31,17 +32,24 @@ const LoginSchema = Yup.object().shape({
 export default function LoginPage() {
   const [showPassword] = useState(false);
   const [opened, setOpened] = useState(false);
+  const router = useRouter();
   const { mutate: loginUser, isPending } = useLogin();
 
   const handleLogin = (values: { email: string; password: string }) => {
     loginUser(values, {
       onSuccess: (response: any) => {
-        if (response?.ok && response.data?.token) {
-          localStorage.setItem("authToken", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
+        // backend now returns { accessToken, refreshToken, user }
+        if (response?.accessToken) {
+          localStorage.setItem("accessToken", response.accessToken);
+          if (response.refreshToken) {
+            localStorage.setItem("refreshToken", response.refreshToken);
+          }
+          localStorage.setItem("user", JSON.stringify(response.user));
+          
           toast.success("Logged in successfully!");
+          router.replace("/dashboard");
         } else {
-          toast.error("Login succeeded but token is missing!");
+          toast.error("Login succeeded but accessToken is missing!");
         }
       },
       onError: (error: any) => {
@@ -216,27 +224,6 @@ export default function LoginPage() {
                               size="lg"
                             >
                               Create Fleet Account
-                            </Button>
-
-                            {/* SSO Buttons */}
-                            <Button
-                              type="button"
-                              variant="outline"
-                              className="w-full h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
-                              size="lg"
-                              leftSection={<IconBrandGoogle size={20} />}
-                            >
-                              Sign in with Google
-                            </Button>
-
-                            <Button
-                              type="button"
-                              variant="outline"
-                              className="w-full h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
-                              size="lg"
-                              leftSection={<IconBrandGithub size={20} />}
-                            >
-                              Sign in with GitHub
                             </Button>
                           </div>
 

@@ -34,11 +34,11 @@ async function makeApiCall<T>({
     headers: customHeaders = {},
     ...config
 }: paramsWithConfig | paramsWithoutConfig) {
-    const token = localStorage.getItem("authToken");
+    const accessToken = localStorage.getItem("accessToken");
 
     // @ts-ignore
     const headers: Record<string, string> = {
-        ...(token && !noAuth ? { Authorization: `Bearer ${token}` } : {}),
+        ...(accessToken && !noAuth ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...customHeaders,
     };
 
@@ -59,13 +59,53 @@ async function makeApiCall<T>({
     } catch (error: any) {
         const response = error.response;
 
-        if (
-            response?.status === 401 &&
-            response?.data?.message ===
-            "Unauthorized access — token is missing or invalid."
-        ) {
+        // Handle 401: try refresh once (unless request was to refresh or marked noAuth)
+        const isUnauthorized = response?.status === 401 && response?.data?.message === "Unauthorized access — token is missing or invalid.";
+        const isRefreshEndpoint = String(url).includes("auth/refresh");
+
+        if (isUnauthorized && !noAuth && !isRefreshEndpoint) {
+            const refreshToken = localStorage.getItem("refreshToken");
+            if (refreshToken) {
+                try {
+                    const refreshResp = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken }, { headers: { "Content-Type": "application/json" } });
+                    const respData = refreshResp.data;
+                    const newAccessToken = respData?.accessToken;
+                    const newRefreshToken = respData?.refreshToken;
+
+                    if (newAccessToken) {
+                        localStorage.setItem("accessToken", newAccessToken);
+                        if (newRefreshToken) localStorage.setItem("refreshToken", newRefreshToken);
+                        if (respData.user) localStorage.setItem("user", JSON.stringify(respData.user));
+
+                        // retry original request with new token
+                        const retryHeaders: Record<string, string> = {
+                            ...(customHeaders || {}),
+                        };
+                        retryHeaders["Authorization"] = `Bearer ${newAccessToken}`;
+                        if (!isFormData && !retryHeaders["Content-Type"]) {
+                            retryHeaders["Content-Type"] = "application/json";
+                        }
+
+                        const retryResponse = await axios<T>({
+                            method,
+                            data,
+                            url: `${BASE_URL}/${url}`,
+                            headers: retryHeaders,
+                            ...config,
+                        });
+
+                        return sendConfig ? retryResponse : retryResponse.data;
+                    }
+                } catch (refreshErr: any) {
+                    // refresh failed -> fall through to clearing session below
+                }
+            }
+
+            // If refresh didn't succeed, clear auth and redirect
             toast.error("Session expired or invalid. Please log in again.");
-            localStorage.clear();
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
 
             setTimeout(() => {
                 window.location.href = "/login";
@@ -74,7 +114,9 @@ async function makeApiCall<T>({
 
         if (response?.status === 403) {
             toast.error("You are not authorized to access this page.");
-            localStorage.clear();
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
             window.location.href = "/403";
         }
 

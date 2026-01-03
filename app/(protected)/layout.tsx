@@ -35,7 +35,7 @@ export default function ProtectedLayout({
 
   // Auth check
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("accessToken");
     if (!token) {
       router.replace("/login");
     } else {

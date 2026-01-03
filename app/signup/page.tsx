@@ -6,7 +6,14 @@ import { Paper, Button, LoadingOverlay } from "@mantine/core";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "@/components/common/Input/CustomInput";
-import { IconUser, IconMail, IconLock, IconTruck, IconBrandGoogle, IconBrandGithub } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconMail,
+  IconLock,
+  IconTruck,
+  IconBrandGoogle,
+  IconBrandGithub,
+} from "@tabler/icons-react";
 import { useSignUp } from "@/api/authentication/hooks/useSignUp";
 import { toast } from "react-toastify";
 
@@ -14,14 +21,20 @@ import { toast } from "react-toastify";
 const SignupSchema = Yup.object().shape({
   name: Yup.string().required("Full name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string().min(6, "Password too short").required("Password is required"),
+  password: Yup.string()
+    .min(6, "Password too short")
+    .required("Password is required"),
 });
 
 export default function SignupPage() {
   const [opened, setOpened] = useState(false);
   const { mutate: signUpUser, isPending } = useSignUp();
 
-  const handleSignup = (values: { name: string; email: string; password: string }) => {
+  const handleSignup = (values: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     signUpUser(values, {
       onSuccess: () => {
         toast.success("Account created successfully! Please verify your email");
@@ -43,7 +56,9 @@ export default function SignupPage() {
             </div>
             <div className="text-left">
               <h1 className="text-3xl font-black text-gray-900">FLEETWISE</h1>
-              <p className="text-sm font-semibold text-cyan-600 tracking-wide">FLEET MANAGEMENT</p>
+              <p className="text-sm font-semibold text-cyan-600 tracking-wide">
+                FLEET MANAGEMENT
+              </p>
             </div>
           </div>
           <p className="text-gray-600 mt-2">Create your FleetWise account</p>
@@ -51,14 +66,25 @@ export default function SignupPage() {
 
         {/* Signup Form */}
         <Paper shadow="xl" radius="lg" p={30} className="relative bg-white">
-          <LoadingOverlay visible={isPending} overlayProps={{ radius: "lg" }} loaderProps={{ type: "bars" }} />
+          <LoadingOverlay
+            visible={isPending}
+            overlayProps={{ radius: "lg" }}
+            loaderProps={{ type: "bars" }}
+          />
 
           <Formik
             initialValues={{ name: "", email: "", password: "" }}
             validationSchema={SignupSchema}
             onSubmit={handleSignup}
           >
-            {({ handleChange, handleBlur, values, errors, touched, submitCount }) => (
+            {({
+              handleChange,
+              handleBlur,
+              values,
+              errors,
+              touched,
+              submitCount,
+            }) => (
               <Form className="space-y-4">
                 <Input
                   id="name"
@@ -97,7 +123,9 @@ export default function SignupPage() {
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={(touched.password || submitCount > 0) && errors.password}
+                  error={
+                    (touched.password || submitCount > 0) && errors.password
+                  }
                   icon={<IconLock size={18} className="text-gray-400" />}
                   size="md"
                   radius="lg"
@@ -113,38 +141,13 @@ export default function SignupPage() {
                   Sign Up
                 </Button>
 
-                {/* Divider */}
-                <div className="relative flex items-center py-4">
-                  <div className="grow border-t border-gray-200"></div>
-                  <span className="shrink mx-4 text-sm text-gray-500">or sign up with</span>
-                  <div className="grow border-t border-gray-200"></div>
-                </div>
-
-                {/* OAuth Buttons - Using Mantine Button */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full h-12 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
-                  size="lg"
-                  leftSection={<IconBrandGoogle size={20} />}
-                >
-                  Sign up with Google
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full h-12 border-gray-300  hover:bg-gray-50 hover:border-gray-400 mt-3"
-                  size="lg"
-                  leftSection={<IconBrandGithub size={20} />}
-                >
-                  Sign up with GitHub
-                </Button>
-
                 {/* Login Link */}
                 <p className="text-center text-sm text-gray-500 mt-6">
                   Already have an account?{" "}
-                  <Link href="/login" className="text-blue-600 font-medium hover:text-blue-700">
+                  <Link
+                    href="/login"
+                    className="text-blue-600 font-medium hover:text-blue-700"
+                  >
                     Sign in
                   </Link>
                 </p>
