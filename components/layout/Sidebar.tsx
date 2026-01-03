@@ -65,7 +65,7 @@ export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
       >
         <div
           className={clsx(
-            "rounded-lg flex items-center justify-center shadow-lg bg-gradient-to-br from-blue-600 to-cyan-500 hover:scale-105 transition-transform duration-300"
+            "rounded-lg flex items-center justify-center shadow-lg bg-linear-to-br from-blue-600 to-cyan-500 hover:scale-105 transition-transform duration-300"
           )}
           style={{
             width: sidebarWidth ? "64px" : "44px",
@@ -93,7 +93,7 @@ export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
                 className={clsx(
                   "flex items-center rounded-[14px] transition-all duration-300",
                   isActive
-                    ? "bg-gradient-to-r from-primary-dark to-primary text-white shadow-lg"
+                    ? "bg-linear-to-r from-primary-dark to-primary text-white shadow-lg"
                     : "hover:bg-primary-light/50 text-gray-200",
                   sidebarWidth
                     ? "gap-4 px-4 py-2 justify-start"

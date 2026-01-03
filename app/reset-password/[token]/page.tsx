@@ -51,12 +51,12 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-12 pt-12">
           <div className="inline-flex items-center justify-center gap-3 mb-3">
-            <div className="bg-gradient-to-br from-blue-600 to-cyan-500 p-3 rounded-xl shadow-lg">
+            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-3 rounded-xl shadow-lg">
               <IconTruck size={28} className="text-white" />
             </div>
             <div className="text-left">

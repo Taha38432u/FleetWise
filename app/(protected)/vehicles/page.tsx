@@ -278,6 +278,8 @@ export default function VehiclesPage() {
       <ResultsSummary
         filteredCount={meta.totalItems}
         totalCount={meta.totalItems}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearFilters}
       />
 
       {/* Table */}

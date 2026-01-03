@@ -78,7 +78,7 @@ async function makeApiCall<T>({
                         if (respData.user) localStorage.setItem("user", JSON.stringify(respData.user));
 
                         // retry original request with new token
-                        const retryHeaders: Record<string, string> = {
+                        const retryHeaders: any = {
                             ...(customHeaders || {}),
                         };
                         retryHeaders["Authorization"] = `Bearer ${newAccessToken}`;

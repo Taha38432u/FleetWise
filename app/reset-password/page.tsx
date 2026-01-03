@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
     confirmPassword: string;
   }) => {
     resetPassword(
-      { token, password: values.password },
+      { token: token || "", password: values.password },
       {
         onSuccess: () => {
           toast.success("Password reset successfully!");
