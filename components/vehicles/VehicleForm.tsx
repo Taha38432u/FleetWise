@@ -1,22 +1,24 @@
 "use client";
 
-import { Button, Group, SimpleGrid } from "@mantine/core";
+import { Button, Group, SimpleGrid, LoadingOverlay } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { Vehicle, VehicleType, VehicleStatus } from "@/data/vehicles";
+import { Vehicle, VehicleType, VehicleStatus, CreateVehicleDto } from "@/data/vehicles";
 import { useEffect } from "react";
 import CustomModal from "@/components/common/Input/CustomModal";
 import Input from "@/components/common/Input/CustomInput";
 import CustomSelect from "@/components/common/Input/CustomSelect";
+import { formatDateInput } from "@/utils/dateFormatter";
 
 interface VehicleFormProps {
   opened: boolean;
   onClose: () => void;
-  onSubmit: (values: Omit<Vehicle, "id">) => void;
+  onSubmit: (values: CreateVehicleDto) => void;
   initialValues?: Vehicle | null;
   mode: "add" | "edit";
+  isLoading?: boolean;
 }
 
-type FormValues = Omit<Vehicle, "id">;
+type FormValues = CreateVehicleDto;
 
 export function VehicleForm({
   opened,
@@ -24,6 +26,7 @@ export function VehicleForm({
   onSubmit,
   initialValues,
   mode,
+  isLoading = false,
 }: VehicleFormProps) {
   const form = useForm<FormValues>({
     initialValues: {
@@ -33,13 +36,13 @@ export function VehicleForm({
       year: new Date().getFullYear(),
       status: "Active" as VehicleStatus,
       mileage: 0,
-      fuel_efficiency: 0,
-      assigned_driver: "",
-      insurance_expiry: "",
-      fitness_expiry: "",
-      last_service: "",
-      next_predicted_maintenance: "",
-      health_score: 100,
+      fuelEfficiency: 0,
+      assignedDriver: "",
+      insuranceExpiry: "",
+      fitnessExpiry: "",
+      lastService: "",
+      nextPredictedMaintenance: "",
+      healthScore: 100,
     },
 
     validate: {
@@ -50,15 +53,30 @@ export function VehicleForm({
         value < 2000 || value > 2026
           ? "Year must be between 2000 and 2026"
           : null,
-      mileage: (value) => (value < 0 ? "Mileage cannot be negative" : null),
-      fuel_efficiency: (value) =>
-        value < 0 ? "Fuel efficiency cannot be negative" : null,
+      mileage: (value) => {
+        const numValue = Number(value);
+        if (numValue < 0) return "Mileage cannot be negative";
+        if (!Number.isInteger(numValue)) return "Mileage must be a whole number";
+        return null;
+      },
+      fuelEfficiency: (value) => {
+        const numValue = Number(value);
+        if (numValue < 0) return "Fuel efficiency cannot be negative";
+        if (!Number.isInteger(numValue)) return "Fuel efficiency must be a whole number";
+        return null;
+      },
     },
   });
 
   useEffect(() => {
     if (initialValues) {
-      form.setValues(initialValues);
+      form.setValues({
+        ...initialValues,
+        lastService: formatDateInput(initialValues.lastService),
+        nextPredictedMaintenance: formatDateInput(initialValues.nextPredictedMaintenance),
+        insuranceExpiry: formatDateInput(initialValues.insuranceExpiry),
+        fitnessExpiry: formatDateInput(initialValues.fitnessExpiry),
+      });
     } else {
       form.reset();
     }
@@ -71,12 +89,19 @@ export function VehicleForm({
       title={mode === "add" ? "Add New Vehicle" : "Edit Vehicle"}
       size="lg"
     >
-      <form
-        onSubmit={form.onSubmit((values) => {
-          onSubmit(values);
-          onClose();
-        })}
-      >
+      <div style={{ position: "relative" }}>
+        <LoadingOverlay visible={isLoading} overlayProps={{ radius: "md" }} />
+        <form
+          onSubmit={form.onSubmit((values) => {
+            // Ensure mileage and fuelEfficiency are integers
+            const intValues = {
+              ...values,
+              mileage: Math.floor(values.mileage),
+              fuelEfficiency: Math.floor(values.fuelEfficiency),
+            };
+            onSubmit(intValues);
+          })}
+        >
         <SimpleGrid cols={2} spacing="lg">
           <Input
             label="Plate Number"
@@ -140,7 +165,7 @@ export function VehicleForm({
           <Input
             label="Assigned Driver"
             placeholder="John Doe"
-            {...form.getInputProps("assigned_driver")}
+            {...form.getInputProps("assignedDriver")}
           />
           <Input
             label="Mileage (km)"
@@ -154,31 +179,52 @@ export function VehicleForm({
             placeholder="10.5"
             type="number"
             min={0}
-            {...form.getInputProps("fuel_efficiency")}
+            {...form.getInputProps("fuelEfficiency")}
+          />
+          <Input
+            label="Last Service"
+            placeholder="YYYY-MM-DD"
+            type="date"
+            {...form.getInputProps("lastService")}
+          />
+          <Input
+            label="Next Predicted Maintenance"
+            placeholder="YYYY-MM-DD"
+            type="date"
+            {...form.getInputProps("nextPredictedMaintenance")}
           />
           <Input
             label="Insurance Expiry"
             placeholder="YYYY-MM-DD"
             type="date"
-            {...form.getInputProps("insurance_expiry")}
+            {...form.getInputProps("insuranceExpiry")}
           />
           <Input
             label="Fitness Cert. Expiry"
             placeholder="YYYY-MM-DD"
             type="date"
-            {...form.getInputProps("fitness_expiry")}
+            {...form.getInputProps("fitnessExpiry")}
+          />
+          <Input
+            label="Health Score"
+            placeholder="0"
+            type="number"
+            min={0}
+            max={100}
+            {...form.getInputProps("healthScore")}
           />
         </SimpleGrid>
 
         <Group justify="flex-end" mt="xl">
-          <Button variant="default" onClick={onClose}>
+          <Button variant="default" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
-          <Button type="submit" color="blue">
+          <Button type="submit" color="blue" loading={isLoading}>
             {mode === "add" ? "Add Vehicle" : "Save Changes"}
           </Button>
         </Group>
       </form>
+      </div>
     </CustomModal>
   );
 }

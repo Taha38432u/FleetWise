@@ -11,9 +11,6 @@ import {
   IconMail,
   IconLock,
   IconTruck,
-  IconShieldCheck,
-  IconBrandGoogle,
-  IconBrandGithub,
 } from "@tabler/icons-react";
 import { useLogin } from "@/api/authentication/hooks/useLogin";
 import { toast } from "react-toastify";

@@ -18,8 +18,7 @@ import {
   IconHistory,
   IconSettings,
   IconHelp,
-  IconCategory,
-  IconWallet,
+  IconTruck,
 } from "@tabler/icons-react";
 import clsx from "clsx";
 
@@ -43,7 +42,6 @@ const menu = [
   { name: "Audit Logs", path: "/audit-logs", icon: IconHistory },
   { name: "Settings", path: "/settings", icon: IconSettings },
   { name: "Help", path: "/support", icon: IconHelp },
-  { name: "Categories", path: "/categories", icon: IconCategory },
 ];
 
 export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
@@ -67,15 +65,15 @@ export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
       >
         <div
           className={clsx(
-            "rounded-full flex items-center justify-center shadow-inner bg-primary-light hover:scale-105 transition-transform duration-300"
+            "rounded-lg flex items-center justify-center shadow-lg bg-gradient-to-br from-blue-600 to-cyan-500 hover:scale-105 transition-transform duration-300"
           )}
           style={{
             width: sidebarWidth ? "64px" : "44px",
             height: sidebarWidth ? "64px" : "44px",
           }}
-          title="Expense Flow"
+          title="FleetWise"
         >
-          <IconWallet
+          <IconTruck
             size={sidebarWidth ? 36 : 28}
             stroke={1.6}
             className="text-white"

@@ -23,7 +23,7 @@ export function VehicleStats({ vehicles }: { vehicles: Vehicle[] }) {
     (v) => v.status === "In Maintenance"
   ).length;
   const avgHealth = Math.round(
-    vehicles.reduce((acc, v) => acc + v.health_score, 0) / totalVehicles
+    vehicles.reduce((acc, v) => acc + v.healthScore, 0) / totalVehicles
   );
 
   return (

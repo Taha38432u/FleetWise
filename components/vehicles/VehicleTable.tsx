@@ -5,6 +5,7 @@ import { IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
 import { Vehicle } from "@/data/vehicles";
 import { CustomTable } from "@/components/common/Table/CustomTable";
 import { ColumnDef } from "@tanstack/react-table";
+import { formatDate } from "@/utils/dateFormatter";
 
 interface VehicleTableProps {
   data: Vehicle[]; // paginated data
@@ -14,7 +15,7 @@ interface VehicleTableProps {
   onPageChange: (page: number) => void;
   onView: (vehicle: Vehicle) => void;
   onEdit: (vehicle: Vehicle) => void;
-  onDelete: (id: string) => void;
+  onDelete: (vehicle: Vehicle) => void;
   isLoading?: boolean;
 }
 
@@ -88,7 +89,7 @@ export function VehicleTable({
       ),
     },
     {
-      accessorKey: "assigned_driver",
+      accessorKey: "assignedDriver",
       header: "Driver",
       cell: (info) => {
         const driver = info.getValue() as string;
@@ -102,9 +103,9 @@ export function VehicleTable({
       },
     },
     {
-      accessorKey: "next_predicted_maintenance",
+      accessorKey: "nextPredictedMaintenance",
       header: "Next Maint.",
-      cell: (info) => <Text size="sm">{info.getValue() as string}</Text>,
+      cell: (info) => <Text size="sm">{formatDate(info.getValue() as string)}</Text>,
     },
     {
       id: "actions",
@@ -130,7 +131,7 @@ export function VehicleTable({
           <ActionIcon
             variant="subtle"
             color="red"
-            onClick={() => onDelete(row.original.id)}
+            onClick={() => onDelete(row.original)}
             title="Delete"
           >
             <IconTrash size={16} />

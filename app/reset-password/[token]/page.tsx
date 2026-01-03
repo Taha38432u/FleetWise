@@ -10,6 +10,7 @@ import {
   Container,
   Center,
 } from "@mantine/core";
+import { IconTruck } from "@tabler/icons-react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "@/components/common/Input/CustomInput";
@@ -50,10 +51,25 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <Center style={{ minHeight: "100vh" }}>
-      <Container size={500} my={20}>
-        <Box>
-          <LoadingOverlay visible={isPending} overlayProps={{ blur: 2 }} />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-12 pt-12">
+          <div className="inline-flex items-center justify-center gap-3 mb-3">
+            <div className="bg-gradient-to-br from-blue-600 to-cyan-500 p-3 rounded-xl shadow-lg">
+              <IconTruck size={28} className="text-white" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-3xl font-black text-gray-900">FLEETWISE</h1>
+              <p className="text-sm font-semibold text-cyan-600 tracking-wide">
+                FLEET MANAGEMENT
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <Box className="bg-white rounded-lg shadow-xl p-8 relative">
+          <LoadingOverlay visible={isPending} overlayProps={{ radius: "lg" }} />
 
           <Text size="xl" fw={700} mb="sm">
             Reset Password
@@ -123,7 +139,7 @@ export default function ResetPasswordPage() {
             )}
           </Formik>
         </Box>
-      </Container>
-    </Center>
+      </div>
+    </div>
   );
 }

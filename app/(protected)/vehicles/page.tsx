@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { Button, TextInput } from "@mantine/core";
 import { IconPlus, IconSearch, IconX } from "@tabler/icons-react";
-import { vehiclesData, Vehicle } from "@/data/vehicles";
+import { Vehicle, CreateVehicleDto } from "@/data/vehicles";
 import { VehicleStats } from "@/components/vehicles/VehicleStats";
 import { VehicleTable } from "@/components/vehicles/VehicleTable";
 import { VehicleModal } from "@/components/vehicles/VehicleModal";
 import { VehicleForm } from "@/components/vehicles/VehicleForm";
+import { VehicleDeleteModal } from "@/components/vehicles/VehicleDeleteModal";
 import { useDisclosure, useDebouncedValue } from "@mantine/hooks";
 import {
   FilterSection,
@@ -17,14 +18,26 @@ import {
   ResultsSummary,
 } from "@/components/common/Filters";
 import CustomSelect from "@/components/common/Input/CustomSelect";
+import {
+  useGetVehicles,
+  useCreateVehicle,
+  useUpdateVehicle,
+  useDeleteVehicle,
+} from "@/hooks/useVehicles";
+import { toast } from "react-toastify";
+
+const PAGE_SIZE = 10;
 
 export default function VehiclesPage() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>(vehiclesData);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isFormOpen, { open: openForm, close: closeForm }] =
     useDisclosure(false);
+  const [isDeleteModalOpen, { open: openDeleteModal, close: closeDeleteModal }] =
+    useDisclosure(false);
   const [formMode, setFormMode] = useState<"add" | "edit">("add");
   const [editVehicle, setEditVehicle] = useState<Vehicle | null>(null);
+  const [vehicleToDelete, setVehicleToDelete] = useState<Vehicle | null>(null);
 
   // Filter State
   const [search, setSearch] = useState("");
@@ -32,8 +45,28 @@ export default function VehiclesPage() {
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 10;
+
+  // API Hooks
+  const { data: vehiclesResponse, isLoading } = useGetVehicles({
+    page: currentPage,
+    pageSize: PAGE_SIZE,
+    status: statusFilter || undefined,
+    type: typeFilter || undefined,
+    search: debouncedSearch || undefined,
+  });
+
+  const createMutation = useCreateVehicle();
+  const updateMutation = useUpdateVehicle();
+  const deleteMutation = useDeleteVehicle();
+
+  // Extract data
+  const vehicles = vehiclesResponse?.data?.data || [];
+  const meta = vehiclesResponse?.data?.meta || {
+    totalItems: 0,
+    totalPages: 0,
+    currentPage: 1,
+    pageSize: PAGE_SIZE,
+  };
 
   // Actions
   const handleView = (vehicle: Vehicle) => {
@@ -46,9 +79,23 @@ export default function VehiclesPage() {
     openForm();
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this vehicle?")) {
-      setVehicles((prev) => prev.filter((v) => v.id !== id));
+  const handleDelete = (vehicle: Vehicle) => {
+    setVehicleToDelete(vehicle);
+    openDeleteModal();
+  };
+
+  const handleConfirmDelete = () => {
+    if (vehicleToDelete?.id) {
+      deleteMutation.mutate(vehicleToDelete.id, {
+        onSuccess: () => {
+          toast.success("Vehicle deleted successfully");
+          closeDeleteModal();
+          setVehicleToDelete(null);
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || "Failed to delete vehicle");
+        },
+      });
     }
   };
 
@@ -58,38 +105,35 @@ export default function VehiclesPage() {
     openForm();
   };
 
-  const handleFormSubmit = (values: Omit<Vehicle, "id">) => {
+  const handleFormSubmit = (values: CreateVehicleDto) => {
     if (formMode === "add") {
-      const newVehicle: Vehicle = {
-        ...values,
-        id: Math.random().toString(36).substr(2, 9),
-        health_score: 100, // Default for new
-      };
-      setVehicles((prev) => [newVehicle, ...prev]);
+      createMutation.mutate(values, {
+        onSuccess: () => {
+          toast.success("Vehicle created successfully");
+          closeForm();
+          setCurrentPage(1);
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || "Failed to create vehicle");
+        },
+      });
     } else if (formMode === "edit" && editVehicle) {
-      setVehicles((prev) =>
-        prev.map((v) => (v.id === editVehicle.id ? { ...v, ...values } : v))
+      // Remove fields that shouldn't be sent on update
+      const { id, createdAt, updatedAt, ...updateData } = values as any;
+      updateMutation.mutate(
+        { id: editVehicle.id, data: updateData },
+        {
+          onSuccess: () => {
+            toast.success("Vehicle updated successfully");
+            closeForm();
+          },
+          onError: (error: any) => {
+            toast.error(error?.message || "Failed to update vehicle");
+          },
+        }
       );
     }
-    closeForm();
   };
-
-  // Filtering Logic
-  const filteredVehicles = vehicles.filter((v) => {
-    const matchesSearch =
-      v.plate.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      v.model.toLowerCase().includes(debouncedSearch.toLowerCase());
-    const matchesStatus = statusFilter ? v.status === statusFilter : true;
-    const matchesType = typeFilter ? v.type === typeFilter : true;
-    return matchesSearch && matchesStatus && matchesType;
-  });
-
-  const totalItems = filteredVehicles.length;
-  const totalPages = Math.ceil(totalItems / PAGE_SIZE);
-  const paginatedData = filteredVehicles.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
-  );
 
   const hasActiveFilters = Boolean(search || statusFilter || typeFilter);
 
@@ -163,8 +207,8 @@ export default function VehiclesPage() {
         filtersExpanded={filtersExpanded}
         setFiltersExpanded={setFiltersExpanded}
         hasActiveFilters={hasActiveFilters}
-        filteredCount={totalItems}
-        totalCount={vehicles.length}
+        filteredCount={meta.totalItems}
+        totalCount={meta.totalItems}
         onClearFilters={clearFilters}
         title="Vehicle Filters"
       >
@@ -196,69 +240,82 @@ export default function VehiclesPage() {
                 { value: "In Maintenance", label: "In Maintenance" },
                 { value: "Decommissioned", label: "Decommissioned" },
               ]}
-              // @ts-ignore
               value={
                 statusFilter
                   ? { value: statusFilter, label: statusFilter }
                   : null
               }
-              onChange={(option: any) => setStatusFilter(option?.value || null)}
+              onChange={(option: any) =>
+                setStatusFilter(option?.value || null)
+              }
+              isClearable
             />
           </FilterControl>
 
           <FilterControl className="min-w-[180px]">
             <CustomSelect
-              placeholder="Type"
+              placeholder="Vehicle Type"
               options={[
                 { value: "Truck", label: "Truck" },
                 { value: "Van", label: "Van" },
                 { value: "Car", label: "Car" },
                 { value: "Bike", label: "Bike" },
               ]}
-              // @ts-ignore
               value={
                 typeFilter ? { value: typeFilter, label: typeFilter } : null
               }
               onChange={(option: any) => setTypeFilter(option?.value || null)}
+              isClearable
             />
           </FilterControl>
         </FilterControls>
-        <ActiveFilterBadges filters={activeFilters} />
       </FilterSection>
 
+      {/* Active Filters */}
+      {hasActiveFilters && <ActiveFilterBadges filters={activeFilters} />}
+
+      {/* Results Summary */}
       <ResultsSummary
-        hasActiveFilters={hasActiveFilters}
-        filteredCount={totalItems}
-        totalCount={vehicles.length}
-        onClearFilters={clearFilters}
-        entityName="vehicles"
+        filteredCount={meta.totalItems}
+        totalCount={meta.totalItems}
       />
 
-      {/* Main Table */}
+      {/* Table */}
       <VehicleTable
-        data={paginatedData}
-        totalItems={totalItems}
-        totalPages={totalPages}
-        currentPage={currentPage}
+        data={vehicles}
+        totalItems={meta.totalItems}
+        totalPages={meta.totalPages}
+        currentPage={meta.currentPage}
         onPageChange={setCurrentPage}
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        isLoading={isLoading}
       />
 
-      {/* Details Modal */}
-      <VehicleModal
-        vehicle={selectedVehicle}
-        onClose={() => setSelectedVehicle(null)}
-      />
+      {/* Modals */}
+      {selectedVehicle && (
+        <VehicleModal
+          vehicle={selectedVehicle}
+          onClose={() => setSelectedVehicle(null)}
+        />
+      )}
 
-      {/* Add/Edit Form Modal */}
       <VehicleForm
         opened={isFormOpen}
         onClose={closeForm}
         onSubmit={handleFormSubmit}
         initialValues={editVehicle}
         mode={formMode}
+        isLoading={createMutation.isPending || updateMutation.isPending}
+      />
+
+      <VehicleDeleteModal
+        opened={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+        vehiclePlate={vehicleToDelete?.plate}
+        isLoading={deleteMutation.isPending}
       />
     </div>
   );

@@ -8,15 +8,35 @@ export interface Vehicle {
   model: string;
   year: number;
   status: VehicleStatus;
-  mileage: number; // in km
-  fuel_efficiency: number; // km/L
-  last_service: string;
-  next_predicted_maintenance: string;
-  assigned_driver: string;
-  insurance_expiry: string;
-  fitness_expiry: string;
-  health_score: number; // 0-100
+  mileage: number; // in km - integer
+  fuelEfficiency: number; // km/L - integer
+  lastService: string;
+  nextPredictedMaintenance: string;
+  assignedDriver: string;
+  insuranceExpiry: string;
+  fitnessExpiry: string;
+  healthScore: number; // 0-100
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+export interface CreateVehicleDto {
+  plate: string;
+  type: VehicleType;
+  model: string;
+  year: number;
+  status?: VehicleStatus;
+  mileage: number; // integer
+  fuelEfficiency: number; // integer
+  lastService: string;
+  nextPredictedMaintenance: string;
+  assignedDriver: string;
+  insuranceExpiry: string;
+  fitnessExpiry: string;
+  healthScore: number;
+}
+
+export interface UpdateVehicleDto extends Partial<CreateVehicleDto> {}
 
 export const vehiclesData: Vehicle[] = [
   {
@@ -27,13 +47,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2021,
     status: "Active",
     mileage: 45200,
-    fuel_efficiency: 12.5,
-    last_service: "2025-10-10",
-    next_predicted_maintenance: "2025-12-15",
-    assigned_driver: "John Doe",
-    insurance_expiry: "2026-01-15",
-    fitness_expiry: "2026-03-10",
-    health_score: 92,
+    fuelEfficiency: 12.5,
+    lastService: "2025-10-10",
+    nextPredictedMaintenance: "2025-12-15",
+    assignedDriver: "John Doe",
+    insuranceExpiry: "2026-01-15",
+    fitnessExpiry: "2026-03-10",
+    healthScore: 92,
   },
   {
     id: "2",
@@ -43,13 +63,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2022,
     status: "Active",
     mileage: 28400,
-    fuel_efficiency: 14.2,
-    last_service: "2025-09-05",
-    next_predicted_maintenance: "2026-01-20",
-    assigned_driver: "Jane Smith",
-    insurance_expiry: "2026-05-22",
-    fitness_expiry: "2026-06-15",
-    health_score: 88,
+    fuelEfficiency: 14.2,
+    lastService: "2025-09-05",
+    nextPredictedMaintenance: "2026-01-20",
+    assignedDriver: "Jane Smith",
+    insuranceExpiry: "2026-05-22",
+    fitnessExpiry: "2026-06-15",
+    healthScore: 88,
   },
   {
     id: "3",
@@ -59,13 +79,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2023,
     status: "Idle",
     mileage: 15600,
-    fuel_efficiency: 22.5,
-    last_service: "2025-11-01",
-    next_predicted_maintenance: "2026-04-10",
-    assigned_driver: "Mike Johnson",
-    insurance_expiry: "2026-08-30",
-    fitness_expiry: "2026-09-01",
-    health_score: 98,
+    fuelEfficiency: 22.5,
+    lastService: "2025-11-01",
+    nextPredictedMaintenance: "2026-04-10",
+    assignedDriver: "Mike Johnson",
+    insuranceExpiry: "2026-08-30",
+    fitnessExpiry: "2026-09-01",
+    healthScore: 98,
   },
   {
     id: "4",
@@ -75,13 +95,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2020,
     status: "In Maintenance",
     mileage: 120500,
-    fuel_efficiency: 6.5,
-    last_service: "2025-08-15",
-    next_predicted_maintenance: "2025-11-20",
-    assigned_driver: "Robert Brown",
-    insurance_expiry: "2025-12-31",
-    fitness_expiry: "2026-01-15",
-    health_score: 65,
+    fuelEfficiency: 6.5,
+    lastService: "2025-08-15",
+    nextPredictedMaintenance: "2025-11-20",
+    assignedDriver: "Robert Brown",
+    insuranceExpiry: "2025-12-31",
+    fitnessExpiry: "2026-01-15",
+    healthScore: 65,
   },
   {
     id: "5",
@@ -91,13 +111,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2022,
     status: "Active",
     mileage: 8900,
-    fuel_efficiency: 45.0,
-    last_service: "2025-10-20",
-    next_predicted_maintenance: "2026-02-05",
-    assigned_driver: "Sarah Davis",
-    insurance_expiry: "2026-07-10",
-    fitness_expiry: "2026-07-20",
-    health_score: 94,
+    fuelEfficiency: 45.0,
+    lastService: "2025-10-20",
+    nextPredictedMaintenance: "2026-02-05",
+    assignedDriver: "Sarah Davis",
+    insuranceExpiry: "2026-07-10",
+    fitnessExpiry: "2026-07-20",
+    healthScore: 94,
   },
   {
     id: "6",
@@ -107,13 +127,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2021,
     status: "Active",
     mileage: 56700,
-    fuel_efficiency: 11.8,
-    last_service: "2025-09-25",
-    next_predicted_maintenance: "2026-01-05",
-    assigned_driver: "David Wilson",
-    insurance_expiry: "2026-03-15",
-    fitness_expiry: "2026-04-01",
-    health_score: 85,
+    fuelEfficiency: 11.8,
+    lastService: "2025-09-25",
+    nextPredictedMaintenance: "2026-01-05",
+    assignedDriver: "David Wilson",
+    insuranceExpiry: "2026-03-15",
+    fitnessExpiry: "2026-04-01",
+    healthScore: 85,
   },
   {
     id: "7",
@@ -123,13 +143,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2024,
     status: "Active",
     mileage: 5200,
-    fuel_efficiency: 0, // Electric
-    last_service: "2025-06-10",
-    next_predicted_maintenance: "2026-06-10",
-    assigned_driver: "Emily White",
-    insurance_expiry: "2027-01-01",
-    fitness_expiry: "2027-01-15",
-    health_score: 99,
+    fuelEfficiency: 0,
+    lastService: "2025-06-10",
+    nextPredictedMaintenance: "2026-06-10",
+    assignedDriver: "Emily White",
+    insuranceExpiry: "2027-01-01",
+    fitnessExpiry: "2027-01-15",
+    healthScore: 99,
   },
   {
     id: "8",
@@ -139,13 +159,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2019,
     status: "Decommissioned",
     mileage: 350000,
-    fuel_efficiency: 5.8,
-    last_service: "2025-01-10",
-    next_predicted_maintenance: "N/A",
-    assigned_driver: "N/A",
-    insurance_expiry: "Expired",
-    fitness_expiry: "Expired",
-    health_score: 20,
+    fuelEfficiency: 5.8,
+    lastService: "2025-01-10",
+    nextPredictedMaintenance: "N/A",
+    assignedDriver: "N/A",
+    insuranceExpiry: "Expired",
+    fitnessExpiry: "Expired",
+    healthScore: 20,
   },
   {
     id: "9",
@@ -155,13 +175,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2020,
     status: "In Maintenance",
     mileage: 98000,
-    fuel_efficiency: 10.5,
-    last_service: "2025-11-25",
-    next_predicted_maintenance: "2025-12-05",
-    assigned_driver: "Tom Clark",
-    insurance_expiry: "2026-02-28",
-    fitness_expiry: "2026-03-15",
-    health_score: 55,
+    fuelEfficiency: 10.5,
+    lastService: "2025-11-25",
+    nextPredictedMaintenance: "2025-12-05",
+    assignedDriver: "Tom Clark",
+    insuranceExpiry: "2026-02-28",
+    fitnessExpiry: "2026-03-15",
+    healthScore: 55,
   },
   {
     id: "10",
@@ -171,13 +191,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2023,
     status: "Active",
     mileage: 4300,
-    fuel_efficiency: 42.0,
-    last_service: "2025-08-05",
-    next_predicted_maintenance: "2025-12-20",
-    assigned_driver: "Lisa Taylor",
-    insurance_expiry: "2026-09-15",
-    fitness_expiry: "2026-09-30",
-    health_score: 96,
+    fuelEfficiency: 42.0,
+    lastService: "2025-08-05",
+    nextPredictedMaintenance: "2025-12-20",
+    assignedDriver: "Lisa Taylor",
+    insuranceExpiry: "2026-09-15",
+    fitnessExpiry: "2026-09-30",
+    healthScore: 96,
   },
   {
     id: "11",
@@ -187,13 +207,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2022,
     status: "Active",
     mileage: 32000,
-    fuel_efficiency: 0, // Electric
-    last_service: "2025-07-20",
-    next_predicted_maintenance: "2026-01-15",
-    assigned_driver: "James Anderson",
-    insurance_expiry: "2026-05-10",
-    fitness_expiry: "2026-05-25",
-    health_score: 95,
+    fuelEfficiency: 0,
+    lastService: "2025-07-20",
+    nextPredictedMaintenance: "2026-01-15",
+    assignedDriver: "James Anderson",
+    insuranceExpiry: "2026-05-10",
+    fitnessExpiry: "2026-05-25",
+    healthScore: 95,
   },
   {
     id: "12",
@@ -203,13 +223,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2021,
     status: "Active",
     mileage: 67000,
-    fuel_efficiency: 7.2,
-    last_service: "2025-09-30",
-    next_predicted_maintenance: "2026-01-30",
-    assigned_driver: "William Martinez",
-    insurance_expiry: "2026-04-20",
-    fitness_expiry: "2026-05-05",
-    health_score: 89,
+    fuelEfficiency: 7.2,
+    lastService: "2025-09-30",
+    nextPredictedMaintenance: "2026-01-30",
+    assignedDriver: "William Martinez",
+    insuranceExpiry: "2026-04-20",
+    fitnessExpiry: "2026-05-05",
+    healthScore: 89,
   },
   {
     id: "13",
@@ -219,13 +239,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2022,
     status: "Idle",
     mileage: 21000,
-    fuel_efficiency: 12.0,
-    last_service: "2025-10-15",
-    next_predicted_maintenance: "2026-03-01",
-    assigned_driver: "Karen Robinson",
-    insurance_expiry: "2026-08-15",
-    fitness_expiry: "2026-09-01",
-    health_score: 91,
+    fuelEfficiency: 12.0,
+    lastService: "2025-10-15",
+    nextPredictedMaintenance: "2026-03-01",
+    assignedDriver: "Karen Robinson",
+    insuranceExpiry: "2026-08-15",
+    fitnessExpiry: "2026-09-01",
+    healthScore: 91,
   },
   {
     id: "14",
@@ -235,13 +255,13 @@ export const vehiclesData: Vehicle[] = [
     year: 2021,
     status: "Active",
     mileage: 15600,
-    fuel_efficiency: 40.5,
-    last_service: "2025-09-10",
-    next_predicted_maintenance: "2026-01-05",
-    assigned_driver: "Daniel Garcia",
-    insurance_expiry: "2026-03-25",
-    fitness_expiry: "2026-04-10",
-    health_score: 87,
+    fuelEfficiency: 40.5,
+    lastService: "2025-09-10",
+    nextPredictedMaintenance: "2026-01-05",
+    assignedDriver: "Daniel Garcia",
+    insuranceExpiry: "2026-03-25",
+    fitnessExpiry: "2026-04-10",
+    healthScore: 87,
   },
   {
     id: "15",
@@ -251,12 +271,12 @@ export const vehiclesData: Vehicle[] = [
     year: 2020,
     status: "In Maintenance",
     mileage: 48000,
-    fuel_efficiency: 15.5,
-    last_service: "2025-11-28",
-    next_predicted_maintenance: "2026-02-15",
-    assigned_driver: "Sophia Rodriguez",
-    insurance_expiry: "2026-01-20",
-    fitness_expiry: "2026-02-05",
-    health_score: 72,
+    fuelEfficiency: 15.5,
+    lastService: "2025-11-28",
+    nextPredictedMaintenance: "2026-02-15",
+    assignedDriver: "Sophia Rodriguez",
+    insuranceExpiry: "2026-01-20",
+    fitnessExpiry: "2026-02-05",
+    healthScore: 72,
   },
 ];

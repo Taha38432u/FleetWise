@@ -24,6 +24,7 @@ import {
 } from "@tabler/icons-react";
 import { Line } from "react-chartjs-2";
 import { Vehicle } from "@/data/vehicles";
+import { formatDate, isDateExpired } from "@/utils/dateFormatter";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -60,12 +61,12 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
       {
         label: "Fuel Efficiency (km/L)",
         data: [
-          vehicle.fuel_efficiency - 0.5,
-          vehicle.fuel_efficiency + 0.2,
-          vehicle.fuel_efficiency,
-          vehicle.fuel_efficiency + 0.8,
-          vehicle.fuel_efficiency - 0.1,
-          vehicle.fuel_efficiency + 0.4,
+          vehicle.fuelEfficiency - 0.5,
+          vehicle.fuelEfficiency + 0.2,
+          vehicle.fuelEfficiency,
+          vehicle.fuelEfficiency + 0.8,
+          vehicle.fuelEfficiency - 0.1,
+          vehicle.fuelEfficiency + 0.4,
         ],
         borderColor: "#10b981",
         backgroundColor: "rgba(16, 185, 129, 0.1)",
@@ -177,7 +178,7 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                 <Text size="lg" fw={600} mb="sm">
                   Assigned Driver
                 </Text>
-                {vehicle.assigned_driver !== "N/A" ? (
+                {vehicle.assignedDriver !== "N/A" ? (
                   <div className="flex flex-col items-center py-4">
                     <ThemeIcon
                       size={64}
@@ -189,7 +190,7 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                       <IconUser size={32} />
                     </ThemeIcon>
                     <Text fw={600} size="lg">
-                      {vehicle.assigned_driver}
+                      {vehicle.assignedDriver}
                     </Text>
                     <Text c="dimmed" size="sm">
                       License: DL-987654
@@ -231,7 +232,7 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                       failure in next 500km.
                     </Text>
                     <Text size="xs" mt={4}>
-                      Due: {vehicle.next_predicted_maintenance}
+                      Due: {formatDate(vehicle.nextPredictedMaintenance)}
                     </Text>
                   </Timeline.Item>
                   <Timeline.Item
@@ -243,7 +244,7 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                       Oil change, filter replacement, and general inspection.
                     </Text>
                     <Text size="xs" mt={4}>
-                      Completed: {vehicle.last_service}
+                      Completed: {formatDate(vehicle.lastService)}
                     </Text>
                   </Timeline.Item>
                   <Timeline.Item
@@ -274,24 +275,24 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                     roundCaps
                     sections={[
                       {
-                        value: vehicle.health_score,
+                        value: vehicle.healthScore,
                         color:
-                          vehicle.health_score > 80
+                          vehicle.healthScore > 80
                             ? "green"
-                            : vehicle.health_score > 50
+                            : vehicle.healthScore > 50
                             ? "yellow"
                             : "red",
                       },
                     ]}
                     label={
                       <Text ta="center" size="xl" fw={700}>
-                        {vehicle.health_score}/100
+                        {vehicle.healthScore}/100
                       </Text>
                     }
                   />
                 </Group>
                 <Text ta="center" c="dimmed" size="sm" mt="sm">
-                  {vehicle.health_score > 80
+                  {vehicle.healthScore > 80
                     ? "Vehicle is in excellent condition."
                     : "Vehicle needs attention soon."}
                 </Text>
@@ -346,12 +347,12 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                   <Text
                     size="xs"
                     c={
-                      new Date(vehicle.insurance_expiry) < new Date()
+                      isDateExpired(vehicle.insuranceExpiry)
                         ? "red"
                         : "dimmed"
                     }
                   >
-                    Expires: {vehicle.insurance_expiry}
+                    Expires: {formatDate(vehicle.insuranceExpiry)}
                   </Text>
                 </div>
                 <Button size="xs" variant="subtle">
@@ -395,12 +396,12 @@ export function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                   <Text
                     size="xs"
                     c={
-                      new Date(vehicle.fitness_expiry) < new Date()
+                      isDateExpired(vehicle.fitnessExpiry)
                         ? "red"
                         : "dimmed"
                     }
                   >
-                    Expires: {vehicle.fitness_expiry}
+                    Expires: {formatDate(vehicle.fitnessExpiry)}
                   </Text>
                 </div>
                 <Button size="xs" variant="subtle">
