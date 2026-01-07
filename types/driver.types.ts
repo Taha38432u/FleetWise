@@ -4,6 +4,19 @@ export type LicenseStatus = "Valid" | "Expired" | "Suspended" | "Pending Verific
 // Driver Availability Status
 export type AvailabilityStatus = "Available" | "On Duty" | "Off Duty" | "On Leave";
 
+// User Info
+export interface UserInfo {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  role: string;
+  status: string;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
 // Driver Profile
 export interface Driver {
   id: string;
@@ -26,15 +39,7 @@ export interface Driver {
   backgroundCheckDate: string | null;
   createdAt: string;
   updatedAt: string;
-  user?: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    role: string;
-    status: string;
-  };
+  user?: UserInfo;
   assignedVehicles?: {
     id: string;
     plate: string;
@@ -45,9 +50,16 @@ export interface Driver {
 
 // Create Driver DTO
 export interface CreateDriverDto {
+  user: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+  };
   licenseNumber: string;
   licenseExpiry: string;
-  licenseStatus: LicenseStatus;
+  // optional - backend may assign default
+  licenseStatus?: LicenseStatus;
   yearsOfExperience: number;
   emergencyContact: string;
   emergencyContactPhone: string;
@@ -133,17 +145,7 @@ export interface GetDriverResponse {
 export interface CreateDriverResponse {
   ok: boolean;
   data: {
-    user: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      phone: string;
-      role: string;
-      status: string;
-      emailVerified: boolean;
-      createdAt: string;
-    };
+    user: UserInfo;
     driver: {
       id: string;
       userId: string;
@@ -165,17 +167,7 @@ export interface CreateDriverResponse {
 export interface UpdateDriverResponse {
   ok: boolean;
   data: {
-    user: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      phone: string;
-      role: string;
-      status: string;
-      emailVerified: boolean;
-      createdAt: string;
-    };
+    user: UserInfo;
     driver: {
       id: string;
       userId: string;

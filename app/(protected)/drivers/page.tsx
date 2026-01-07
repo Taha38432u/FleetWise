@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button, TextInput } from "@mantine/core";
 import { IconPlus, IconSearch, IconX } from "@tabler/icons-react";
-import { Driver, CreateDriverDto } from "@/types/driver.types";
+import { Driver, CreateDriverDto, UpdateDriverDto } from "@/types/driver.types";
 import { DriverTable } from "@/components/drivers/DriverTable";
 import { DriverForm } from "@/components/drivers/DriverForm";
 import { DriverModal } from "@/components/drivers/DriverModal";
@@ -13,8 +13,6 @@ import {
   FilterSection,
   FilterControls,
   FilterControl,
-  ActiveFilterBadges,
-  ResultsSummary,
 } from "@/components/common/Filters";
 import CustomSelect from "@/components/common/Input/CustomSelect";
 import {
@@ -111,19 +109,30 @@ export default function DriversPage() {
     openForm();
   };
 
-  const handleFormSubmit = (values: CreateDriverDto) => {
+  const handleFormSubmit = (values: CreateDriverDto | UpdateDriverDto) => {
     if (formMode === "add") {
-      // For add mode, we need userId - for now we'll need to handle this differently
-      // This would typically come from a user selection or context
-      toast.error("User selection required for new driver profile");
+      createMutation.mutate(values as CreateDriverDto, {
+        onSuccess: () => {
+          toast.success("Driver created successfully");
+          closeForm();
+          setCurrentPage(1);
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || "Failed to create driver");
+        },
+      });
     } else if (formMode === "edit" && editDriver) {
-      const { createdAt, updatedAt, user, assignedVehicles, ...updateData } = editDriver as any;
       updateMutation.mutate(
-        { id: editDriver.id, data: updateData },
+        { 
+          id: editDriver.id, 
+          data: values as any 
+        },
         {
           onSuccess: () => {
             toast.success("Driver updated successfully");
             closeForm();
+            setEditDriver(null);
+            setCurrentPage(1);
           },
           onError: (error: any) => {
             toast.error(error?.message || "Failed to update driver");
@@ -136,39 +145,6 @@ export default function DriversPage() {
   const hasActiveFilters = Boolean(
     search || licenseStatusFilter || availabilityFilter
   );
-
-  const activeFilters = [
-    ...(search
-      ? [
-          {
-            key: "search",
-            label: `Search: ${search}`,
-            value: search,
-            onRemove: () => setSearch(""),
-          },
-        ]
-      : []),
-    ...(licenseStatusFilter
-      ? [
-          {
-            key: "licenseStatus",
-            label: `License: ${licenseStatusFilter}`,
-            value: licenseStatusFilter,
-            onRemove: () => setLicenseStatusFilter(null),
-          },
-        ]
-      : []),
-    ...(availabilityFilter
-      ? [
-          {
-            key: "availability",
-            label: `Availability: ${availabilityFilter}`,
-            value: availabilityFilter,
-            onRemove: () => setAvailabilityFilter(null),
-          },
-        ]
-      : []),
-  ];
 
   return (
     <div className="space-y-6">
@@ -191,8 +167,17 @@ export default function DriversPage() {
 
       {/* Filters */}
       <FilterSection
-        expanded={filtersExpanded}
-        onToggle={() => setFiltersExpanded(!filtersExpanded)}
+        filtersExpanded={filtersExpanded}
+        setFiltersExpanded={setFiltersExpanded}
+        hasActiveFilters={hasActiveFilters}
+        filteredCount={meta.totalItems}
+        totalCount={meta.totalItems}
+        onClearFilters={() => {
+          setSearch("");
+          setLicenseStatusFilter(null);
+          setAvailabilityFilter(null);
+          setCurrentPage(1);
+        }}
       >
         <FilterControls>
           <FilterControl className="min-w-[250px]">
@@ -262,22 +247,6 @@ export default function DriversPage() {
           </FilterControl>
         </FilterControls>
       </FilterSection>
-
-      {/* Active Filters */}
-      {hasActiveFilters && <ActiveFilterBadges filters={activeFilters} />}
-
-      {/* Results Summary */}
-      <ResultsSummary
-        filteredCount={meta.totalItems}
-        totalCount={meta.totalItems}
-        hasActiveFilters={hasActiveFilters}
-        onClearFilters={() => {
-          setSearch("");
-          setLicenseStatusFilter(null);
-          setAvailabilityFilter(null);
-          setCurrentPage(1);
-        }}
-      />
 
       {/* Table */}
       <DriverTable

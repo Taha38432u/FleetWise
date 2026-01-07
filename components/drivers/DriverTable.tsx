@@ -119,7 +119,7 @@ export function DriverTable({
         const totalRatings = row.original.totalRatings as number;
         return (
           <Text size="sm">
-            ⭐ {rating.toFixed(1)} ({totalRatings || 0})
+            ⭐ {rating?.toFixed(1)} ({totalRatings || 0})
           </Text>
         );
       },

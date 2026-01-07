@@ -53,8 +53,7 @@ export const useCreateDriver = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ userId, data }: { userId: string; data: CreateDriverDto }) =>
-      createDriver(userId, data),
+    mutationFn: (data: CreateDriverDto) => createDriver(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["drivers"] });
     },

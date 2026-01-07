@@ -57,10 +57,10 @@ export const getDriverByUserId = async (userId: string) => {
 };
 
 // Create driver profile
-export const createDriver = async (userId: string, data: CreateDriverDto) => {
+export const createDriver = async (data: CreateDriverDto) => {
   const response = await makeApiCall<CreateDriverResponse>({
     method: "POST",
-    url: `${BASE_URL}/${userId}`,
+    url: `${BASE_URL}`,
     data,
   });
 

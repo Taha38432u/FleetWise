@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Modal,
   Text,
   Badge,
   Group,
-  Box,
   Tabs,
   Stack,
   Paper,
@@ -15,10 +14,8 @@ import {
   ThemeIcon,
   Progress,
   Button,
-  Timeline,
   RingProgress,
   Select,
-  MultiSelect,
   LoadingOverlay,
   ActionIcon,
 } from "@mantine/core";
@@ -26,12 +23,9 @@ import {
   IconUser,
   IconFileText,
   IconPhone,
-  IconCalendar,
   IconCheck,
   IconAlertTriangle,
   IconTruck,
-  IconStar,
-  IconMap,
   IconPlus,
   IconMinus,
   IconClock,
@@ -342,7 +336,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
                     label={
                       <div className="text-center">
                         <Text size="lg" fw={700}>
-                          {driverData.averageRating.toFixed(1)}
+                          {driverData?.averageRating?.toFixed(1)}
                         </Text>
                         <Text size="xs" c="dimmed">
                           / 5.0
@@ -375,7 +369,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
                         Total Distance
                       </Text>
                       <Text size="sm" fw={600}>
-                        {driverData.totalDistance.toLocaleString()} km
+                        {driverData?.totalDistance?.toLocaleString()} km
                       </Text>
                     </Group>
                     <Progress
@@ -514,7 +508,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
                       onClick={() =>
                         handleUnassignVehicle(vehicle.id)
                       }
-                      loading={unassignMutation.isPending}
+                      loading={unassignMutation.isLoading}
                     >
                       <IconMinus size={18} />
                     </ActionIcon>
@@ -582,7 +576,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
                         );
                       }
                     }}
-                    loading={assignMutation.isPending}
+                    loading={assignMutation.isLoading}
                   >
                     Assign
                   </Button>
@@ -637,7 +631,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
             <Button
               color="red"
               onClick={confirmUnassignVehicle}
-              loading={unassignMutation.isPending}
+              loading={unassignMutation.isLoading}
             >
               Unassign Vehicle
             </Button>

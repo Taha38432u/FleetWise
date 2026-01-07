@@ -7,17 +7,10 @@ import {
   IconMap2,
   IconCar,
   IconUsers,
-  IconRoute,
-  IconBrain,
   IconTool,
-  IconGasStation,
-  IconBell,
   IconReportAnalytics,
-  IconLockAccess,
   IconCreditCard,
-  IconHistory,
   IconSettings,
-  IconHelp,
   IconTruck,
 } from "@tabler/icons-react";
 import clsx from "clsx";
@@ -27,21 +20,11 @@ const menu = [
   { name: "Live Tracking", path: "/live-tracking", icon: IconMap2 },
   { name: "Vehicles", path: "/vehicles", icon: IconCar },
   { name: "Drivers", path: "/drivers", icon: IconUsers },
-  { name: "Dispatch", path: "/dispatch", icon: IconRoute },
-  {
-    name: "Predictive Maint.",
-    path: "/predictive-maintenance",
-    icon: IconBrain,
-  },
+  { name: "Mechanics", path: "/mechanics", icon: IconUsers },
   { name: "Maintenance", path: "/maintenance", icon: IconTool },
-  { name: "Fuel Mgmt", path: "/fuel", icon: IconGasStation },
-  { name: "Alerts", path: "/alerts", icon: IconBell },
   { name: "Reports", path: "/reports", icon: IconReportAnalytics },
-  { name: "User Roles", path: "/users", icon: IconLockAccess },
   { name: "Subscription", path: "/billing", icon: IconCreditCard },
-  { name: "Audit Logs", path: "/audit-logs", icon: IconHistory },
   { name: "Settings", path: "/settings", icon: IconSettings },
-  { name: "Help", path: "/support", icon: IconHelp },
 ];
 
 export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
