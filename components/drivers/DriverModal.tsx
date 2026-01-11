@@ -312,43 +312,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
 
             {/* Right Column - Performance Metrics */}
             <Grid.Col span={4}>
-              {/* Rating Card */}
-              <Paper withBorder p="md" radius="md" mb="md" className="bg-linear-to-br from-blue-50 to-transparent">
-                <Text size="lg" fw={600} mb="md">
-                  Performance
-                </Text>
-                <Group justify="center" mb="md">
-                  <RingProgress
-                    size={120}
-                    thickness={8}
-                    roundCaps
-                    sections={[
-                      {
-                        value: (driverData.averageRating / 5) * 100,
-                        color:
-                          driverData.averageRating >= 4
-                            ? "green"
-                            : driverData.averageRating >= 3
-                            ? "yellow"
-                            : "red",
-                      },
-                    ]}
-                    label={
-                      <div className="text-center">
-                        <Text size="lg" fw={700}>
-                          {driverData?.averageRating?.toFixed(1)}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          / 5.0
-                        </Text>
-                      </div>
-                    }
-                  />
-                </Group>
-                <Text ta="center" size="sm" c="dimmed">
-                  {driverData.totalRatings} ratings
-                </Text>
-              </Paper>
+              
 
               {/* Stats Card */}
               <Paper withBorder p="md" radius="md">

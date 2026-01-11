@@ -66,21 +66,21 @@ export default function Home() {
   const testimonials = [
     {
       name: "Muhammad Taha Rasheed",
-      role: "Project Lead & Backend Developer",
+      role: "",
       quote:
         "FleetWise transforms how logistics companies manage their operations with AI-powered insights.",
       avatar: "TR",
     },
     {
       name: "Muhammad Kaif Tahir",
-      role: "Frontend & UI/UX Developer",
+      role: "",
       quote:
         "We've created an intuitive interface that makes fleet management accessible to everyone.",
       avatar: "KT",
     },
     {
       name: "Hassan Tayyab",
-      role: "AI & Deployment Specialist",
+      role: "",
       quote:
         "Our predictive maintenance system reduces vehicle breakdowns by up to 70%.",
       avatar: "HT",
@@ -286,14 +286,6 @@ export default function Home() {
                 <div>
                   <div className="text-sm opacity-80">Degree</div>
                   <div className="font-semibold">BS in Computer Science</div>
-                </div>
-                <div>
-                  <div className="text-sm opacity-80">Supervisor</div>
-                  <div className="font-semibold">Dr. ABC</div>
-                </div>
-                <div>
-                  <div className="text-sm opacity-80">Co-Supervisor</div>
-                  <div className="font-semibold">Mr. XYZ</div>
                 </div>
               </div>
             </div>

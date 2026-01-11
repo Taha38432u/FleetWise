@@ -31,8 +31,6 @@ export interface Driver {
   availabilityStatus: AvailabilityStatus;
   totalRides: number;
   totalDistance: number;
-  averageRating: number;
-  totalRatings: number;
   lastWorkingDate: string | null;
   documentVerified: boolean;
   backgroundCheckDone: boolean;
@@ -70,6 +68,13 @@ export interface CreateDriverDto {
 
 // Update Driver DTO
 export interface UpdateDriverDto {
+  user?: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+  };
+
   licenseNumber?: string;
   licenseExpiry?: string;
   licenseStatus?: LicenseStatus;
@@ -106,22 +111,6 @@ export interface CreateDrivingRecordDto {
   notes: string;
 }
 
-// Driver Rating
-export interface DriverRating {
-  id: string;
-  driverId: string;
-  rating: number; // 0-5
-  comment: string;
-  ratedBy: string;
-  createdAt: string;
-}
-
-// Create Driver Rating DTO
-export interface CreateDriverRatingDto {
-  rating: number; // 0-5
-  comment: string;
-  ratedBy: string;
-}
 
 // API Response Types
 export interface GetDriversResponse {
@@ -199,23 +188,12 @@ export interface GetDrivingRecordsResponse {
   };
 }
 
-export interface GetDriverRatingsResponse {
-  ok: boolean;
-  data: {
-    data: DriverRating[];
-    meta: {
-      totalItems: number;
-      totalPages: number;
-      currentPage: number;
-      pageSize: number;
-    };
-  };
-}
-
 // Query Params
 export interface GetDriversParams {
   page?: number;
   pageSize?: number;
+  limit?: number;
+  isVehicleAssigned?: boolean;
   licenseStatus?: LicenseStatus;
   availabilityStatus?: AvailabilityStatus;
   search?: string;

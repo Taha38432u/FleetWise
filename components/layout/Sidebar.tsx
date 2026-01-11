@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   IconLayoutDashboard,
   IconMap2,
@@ -12,8 +12,10 @@ import {
   IconCreditCard,
   IconSettings,
   IconTruck,
+  IconLogout,
 } from "@tabler/icons-react";
 import clsx from "clsx";
+import { logout as apiLogout } from "@/api/auth/authApi";
 
 const menu = [
   { name: "Command Center", path: "/dashboard", icon: IconLayoutDashboard },
@@ -29,6 +31,7 @@ const menu = [
 
 export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <aside
@@ -103,6 +106,28 @@ export default function Sidebar({ sidebarWidth }: { sidebarWidth: boolean }) {
           );
         })}
       </ul>
+
+        {/* Logout at bottom */}
+        <div className="px-4 pt-3 border-t border-white/20">
+          <button
+            onClick={async () => {
+              try {
+                await apiLogout();
+              } catch (e) {}
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              localStorage.removeItem("user");
+              router.push("/login");
+            }}
+            className={clsx(
+              "flex items-center gap-3 w-full rounded-[12px] px-4 py-2 hover:bg-primary-light/40 transition",
+              sidebarWidth ? "justify-start" : "justify-center"
+            )}
+          >
+            <IconLogout size={18} className="text-gray-200" />
+            {sidebarWidth && <span className="font-semibold text-[15px] text-gray-200">Logout</span>}
+          </button>
+        </div>
     </aside>
   );
 }

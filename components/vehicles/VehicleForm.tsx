@@ -3,7 +3,9 @@
 import { Button, Group, SimpleGrid, LoadingOverlay } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Vehicle, VehicleType, VehicleStatus, CreateVehicleDto } from "@/data/vehicles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getDrivers } from "@/api/drivers/driverApi";
+import { Driver } from "@/types/driver.types";
 import CustomModal from "@/components/common/Input/CustomModal";
 import Input from "@/components/common/Input/CustomInput";
 import CustomSelect from "@/components/common/Input/CustomSelect";
@@ -37,7 +39,7 @@ export function VehicleForm({
       status: "Active" as VehicleStatus,
       mileage: 0,
       fuelEfficiency: 0,
-      assignedDriver: "",
+      assignedDriverId: "",
       insuranceExpiry: "",
       fitnessExpiry: "",
       lastService: "",
@@ -67,6 +69,29 @@ export function VehicleForm({
       },
     },
   });
+
+  const [driverOptions, setDriverOptions] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    // fetch drivers with large limit and specified filter
+    const fetchDrivers = async () => {
+      try {
+        const res = await getDrivers({ limit: 9999999, isVehicleAssigned: true });
+        if (res?.ok && res.data?.data) {
+          const options = res.data.data.map((d: Driver) => ({
+            value: d.id,
+            label: d.user ? `${d.user.firstName} ${d.user.lastName}` : d.id,
+          }));
+          setDriverOptions(options);
+        }
+      } catch (err) {
+        // ignore - keep options empty
+        console.error("Failed to load drivers for select", err);
+      }
+    };
+
+    fetchDrivers();
+  }, []);
 
   useEffect(() => {
     if (initialValues) {
@@ -162,10 +187,16 @@ export function VehicleForm({
               form.setFieldValue("status", option?.value)
             }
           />
-          <Input
+          <CustomSelect
             label="Assigned Driver"
-            placeholder="John Doe"
-            {...form.getInputProps("assignedDriver")}
+            placeholder="Select driver"
+            options={driverOptions}
+            value={
+              form.values.assignedDriverId
+                ? { value: form.values.assignedDriverId, label: driverOptions.find(o => o.value === form.values.assignedDriverId)?.label || form.values.assignedDriverId }
+                : null
+            }
+            onChange={(option: any) => form.setFieldValue("assignedDriverId", option?.value || "")}
           />
           <Input
             label="Mileage (km)"

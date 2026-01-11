@@ -33,8 +33,10 @@ export default function VehiclesPage() {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isFormOpen, { open: openForm, close: closeForm }] =
     useDisclosure(false);
-  const [isDeleteModalOpen, { open: openDeleteModal, close: closeDeleteModal }] =
-    useDisclosure(false);
+  const [
+    isDeleteModalOpen,
+    { open: openDeleteModal, close: closeDeleteModal },
+  ] = useDisclosure(false);
   const [formMode, setFormMode] = useState<"add" | "edit">("add");
   const [editVehicle, setEditVehicle] = useState<Vehicle | null>(null);
   const [vehicleToDelete, setVehicleToDelete] = useState<Vehicle | null>(null);
@@ -245,9 +247,7 @@ export default function VehiclesPage() {
                   ? { value: statusFilter, label: statusFilter }
                   : null
               }
-              onChange={(option: any) =>
-                setStatusFilter(option?.value || null)
-              }
+              onChange={(option: any) => setStatusFilter(option?.value || null)}
               isClearable
             />
           </FilterControl>
@@ -303,14 +303,16 @@ export default function VehiclesPage() {
         />
       )}
 
-      <VehicleForm
-        opened={isFormOpen}
-        onClose={closeForm}
-        onSubmit={handleFormSubmit}
-        initialValues={editVehicle}
-        mode={formMode}
-        isLoading={createMutation.isPending || updateMutation.isPending}
-      />
+      {isFormOpen && (
+        <VehicleForm
+          opened={isFormOpen}
+          onClose={closeForm}
+          onSubmit={handleFormSubmit}
+          initialValues={editVehicle}
+          mode={formMode}
+          isLoading={createMutation.isPending || updateMutation.isPending}
+        />
+      )}
 
       <VehicleDeleteModal
         opened={isDeleteModalOpen}

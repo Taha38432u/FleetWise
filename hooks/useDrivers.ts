@@ -10,15 +10,12 @@ import {
   unassignVehicleFromDriver,
   addDrivingRecord,
   getDrivingRecords,
-  addDriverRating,
-  getDriverRatings,
 } from "@/api/drivers/driverApi";
 import {
   GetDriversParams,
   CreateDriverDto,
   UpdateDriverDto,
   CreateDrivingRecordDto,
-  CreateDriverRatingDto,
 } from "@/types/driver.types";
 
 // Get all drivers
@@ -135,25 +132,4 @@ export const useGetDrivingRecords = (driverId: string, page = 1, pageSize = 10) 
   });
 };
 
-// Add driver rating
-export const useAddDriverRating = () => {
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({ driverId, data }: { driverId: string; data: CreateDriverRatingDto }) =>
-      addDriverRating(driverId, data),
-    onSuccess: (_, { driverId }) => {
-      queryClient.invalidateQueries({ queryKey: ["driver-ratings", driverId] });
-      queryClient.invalidateQueries({ queryKey: ["driver", driverId] });
-    },
-  });
-};
-
-// Get driver ratings
-export const useGetDriverRatings = (driverId: string, page = 1, pageSize = 10) => {
-  return useQuery({
-    queryKey: ["driver-ratings", driverId, page, pageSize],
-    queryFn: () => getDriverRatings(driverId, page, pageSize),
-    enabled: !!driverId,
-  });
-};

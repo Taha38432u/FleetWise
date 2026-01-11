@@ -9,8 +9,6 @@ import {
   GetDriversParams,
   CreateDrivingRecordDto,
   GetDrivingRecordsResponse,
-  CreateDriverRatingDto,
-  GetDriverRatingsResponse,
 } from "@/types/driver.types";
 
 const BASE_URL = "drivers";
@@ -21,6 +19,9 @@ export const getDrivers = async (params?: GetDriversParams) => {
 
   if (params?.page) searchParams.append("page", params.page.toString());
   if (params?.pageSize) searchParams.append("pageSize", params.pageSize.toString());
+  if (params?.limit) searchParams.append("limit", params.limit.toString());
+  if (typeof params?.isVehicleAssigned !== "undefined")
+    searchParams.append("isVehicleAssigned", String(params.isVehicleAssigned));
   if (params?.licenseStatus) searchParams.append("licenseStatus", params.licenseStatus);
   if (params?.availabilityStatus) searchParams.append("availabilityStatus", params.availabilityStatus);
   if (params?.search) searchParams.append("search", params.search);
@@ -129,23 +130,3 @@ export const getDrivingRecords = async (driverId: string, page = 1, pageSize = 1
   return response;
 };
 
-// Add driver rating
-export const addDriverRating = async (driverId: string, data: CreateDriverRatingDto) => {
-  const response = await makeApiCall({
-    method: "POST",
-    url: `${BASE_URL}/${driverId}/ratings`,
-    data,
-  });
-
-  return response;
-};
-
-// Get driver ratings
-export const getDriverRatings = async (driverId: string, page = 1, pageSize = 10) => {
-  const response = await makeApiCall<GetDriverRatingsResponse>({
-    method: "GET",
-    url: `${BASE_URL}/${driverId}/ratings?page=${page}&pageSize=${pageSize}`,
-  });
-
-  return response;
-};

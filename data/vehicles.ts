@@ -30,7 +30,7 @@ export interface CreateVehicleDto {
   fuelEfficiency: number; // integer
   lastService: string;
   nextPredictedMaintenance: string;
-  assignedDriver: string;
+  assignedDriverId: string;
   insuranceExpiry: string;
   fitnessExpiry: string;
   healthScore: number;

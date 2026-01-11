@@ -111,23 +111,13 @@ export function DriverTable({
       header: "Experience",
       cell: (info) => <Text size="sm">{info.getValue() as number} years</Text>,
     },
-    {
-      accessorKey: "averageRating",
-      header: "Rating",
-      cell: ({ row }) => {
-        const rating = row.original.averageRating as number;
-        const totalRatings = row.original.totalRatings as number;
-        return (
-          <Text size="sm">
-            ⭐ {rating?.toFixed(1)} ({totalRatings || 0})
-          </Text>
-        );
-      },
-    },
+
     {
       accessorKey: "licenseExpiry",
       header: "License Expiry",
-      cell: (info) => <Text size="sm">{formatDate(info.getValue() as string)}</Text>,
+      cell: (info) => (
+        <Text size="sm">{formatDate(info.getValue() as string)}</Text>
+      ),
     },
     {
       id: "actions",

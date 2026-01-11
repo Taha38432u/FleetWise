@@ -73,7 +73,19 @@ const getValidationSchema = (mode: "add" | "edit") => {
     return base.concat(userSchema as any);
   }
 
-  return base;
+  // For edit mode: allow `user` to be optional, but validate fields if provided
+  const userEditSchema = Yup.object().shape({
+    user: Yup.object().shape({
+      email: Yup.string().email("Invalid email"),
+      firstName: Yup.string(),
+      lastName: Yup.string(),
+      phone: Yup.string()
+        .matches(/^[0-9+\-\s()]+$/, "Invalid phone number format")
+        .min(10, "Phone must be at least 10 digits"),
+    }).notRequired(),
+  });
+
+  return base.concat(userEditSchema as any);
 };
 
 export function DriverForm({
@@ -87,6 +99,12 @@ export function DriverForm({
   const getInitialValues = (): CreateDriverDto | UpdateDriverDto => {
     if (initialValues && mode === "edit") {
       const editVals: UpdateDriverDto = {
+        user: {
+          email: initialValues.user?.email || undefined,
+          firstName: initialValues.user?.firstName || undefined,
+          lastName: initialValues.user?.lastName || undefined,
+          phone: initialValues.user?.phone || undefined,
+        },
         licenseNumber: initialValues.licenseNumber || undefined,
         licenseExpiry: initialValues.licenseExpiry || undefined,
         licenseStatus: initialValues.licenseStatus || undefined,
@@ -147,38 +165,36 @@ export function DriverForm({
             const vals: any = values as any;
             return (
             <Form>
-              {mode === "add" && (
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="md">
-                  <Input
-                    label="Email"
-                    placeholder="driver@company.com"
-                    value={vals.user?.email || ""}
-                    onChange={(e) => setFieldValue("user.email", e.target.value)}
-                    error={(touched as any).user?.email ? (errors as any).user?.email : undefined}
-                  />
-                  <Input
-                    label="Phone"
-                    placeholder="+91-9876543210"
-                    value={vals.user?.phone || ""}
-                    onChange={(e) => setFieldValue("user.phone", e.target.value)}
-                    error={(touched as any).user?.phone ? (errors as any).user?.phone : undefined}
-                  />
-                  <Input
-                    label="First Name"
-                    placeholder="John"
-                    value={vals.user?.firstName || ""}
-                    onChange={(e) => setFieldValue("user.firstName", e.target.value)}
-                    error={(touched as any).user?.firstName ? (errors as any).user?.firstName : undefined}
-                  />
-                  <Input
-                    label="Last Name"
-                    placeholder="Doe"
-                    value={vals.user?.lastName || ""}
-                    onChange={(e) => setFieldValue("user.lastName", e.target.value)}
-                    error={(touched as any).user?.lastName ? (errors as any).user?.lastName : undefined}
-                  />
-                </SimpleGrid>
-              )}
+              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="md">
+                <Input
+                  label="Email"
+                  placeholder="driver@company.com"
+                  value={vals.user?.email || ""}
+                  onChange={(e) => setFieldValue("user.email", e.target.value)}
+                  error={(touched as any).user?.email ? (errors as any).user?.email : undefined}
+                />
+                <Input
+                  label="Phone"
+                  placeholder="+91-9876543210"
+                  value={vals.user?.phone || ""}
+                  onChange={(e) => setFieldValue("user.phone", e.target.value)}
+                  error={(touched as any).user?.phone ? (errors as any).user?.phone : undefined}
+                />
+                <Input
+                  label="First Name"
+                  placeholder="John"
+                  value={vals.user?.firstName || ""}
+                  onChange={(e) => setFieldValue("user.firstName", e.target.value)}
+                  error={(touched as any).user?.firstName ? (errors as any).user?.firstName : undefined}
+                />
+                <Input
+                  label="Last Name"
+                  placeholder="Doe"
+                  value={vals.user?.lastName || ""}
+                  onChange={(e) => setFieldValue("user.lastName", e.target.value)}
+                  error={(touched as any).user?.lastName ? (errors as any).user?.lastName : undefined}
+                />
+              </SimpleGrid>
               <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" mb="md">
                 <div>
                   <Input
