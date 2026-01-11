@@ -1,4 +1,4 @@
-import { format, parseISO, isValid } from "date-fns";
+import { format, parseISO, isValid, formatDistanceToNow } from "date-fns";
 
 /**
  * Formats a date string or Date object to a readable format
@@ -72,7 +72,6 @@ export const formatDateRelative = (
   if (!date) return "-";
 
   try {
-    const { formatDistanceToNow } = require("date-fns");
     const dateObj = typeof date === "string" ? parseISO(date) : date;
 
     if (!isValid(dateObj)) {

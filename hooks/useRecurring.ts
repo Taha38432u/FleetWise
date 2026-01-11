@@ -20,7 +20,7 @@ export function useGetRecurringTransactions(params?: {
     queryKey: ["recurring-transactions", params],
     queryFn: () => getRecurringTransactions(params),
     enabled: params?.enabled ?? true,
-    placeholderData: (prevData) => prevData,
+    placeholderData: (prevData: GetApiResponse<RecurringTransaction> | undefined) => prevData,
   });
 }
 
@@ -77,11 +77,11 @@ export function useRecurringTransactionInfo(recurring: RecurringTransaction) {
   const now = new Date();
   const daysUntilNextRun = Math.ceil((nextRunDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
   
-  const frequencyLabels = {
+  const frequencyLabels: Record<string, string> = {
     daily: "Daily",
-    weekly: "Weekly", 
+    weekly: "Weekly",
     monthly: "Monthly",
-    yearly: "Yearly"
+    yearly: "Yearly",
   };
 
   return {

@@ -36,7 +36,7 @@ export interface CreateVehicleDto {
   healthScore: number;
 }
 
-export interface UpdateVehicleDto extends Partial<CreateVehicleDto> {}
+export type UpdateVehicleDto = Partial<CreateVehicleDto>;
 
 export const vehiclesData: Vehicle[] = [
   {

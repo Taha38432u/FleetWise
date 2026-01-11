@@ -26,7 +26,7 @@ export function useGetTransactions(params?: {
     queryKey: ["transactions", params],
     queryFn: () => getTransactions(params),
     enabled: params?.enabled ?? true,
-    placeholderData: (prevData) => prevData,
+    placeholderData: (prevData: GetApiResponse<Transaction> | undefined) => prevData,
   });
 }
 

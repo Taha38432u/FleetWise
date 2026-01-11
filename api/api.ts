@@ -36,7 +36,7 @@ async function makeApiCall<T>({
 }: paramsWithConfig | paramsWithoutConfig) {
     const accessToken = localStorage.getItem("accessToken");
 
-    // @ts-ignore
+    // @ts-expect-error allow flexible header typing
     const headers: Record<string, string> = {
         ...(accessToken && !noAuth ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...customHeaders,
@@ -96,7 +96,7 @@ async function makeApiCall<T>({
 
                         return sendConfig ? retryResponse : retryResponse.data;
                     }
-                } catch (refreshErr: any) {
+                } catch (_refreshErr: any) {
                     // refresh failed -> fall through to clearing session below
                 }
             }

@@ -15,7 +15,7 @@ export function useGetCategories(params?: {
         queryKey: ["categories", params],
         queryFn: () => getCategories(params),
         enabled: params?.enabled ?? true,
-        placeholderData: (prevData) => prevData,
+        placeholderData: (prevData: GetApiResponse<Category> | undefined) => prevData,
     });
 }
 

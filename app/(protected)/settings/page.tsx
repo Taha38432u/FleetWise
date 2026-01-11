@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { TextInput, Button, LoadingOverlay, Box, Paper, Group, ThemeIcon, Text } from "@mantine/core";
+import { TextInput, Button, LoadingOverlay, Paper, Group, ThemeIcon, Text } from "@mantine/core";
 import CustomModal from "@/components/common/Input/CustomModal";
 import { useGetMe, useUpdateMe } from "@/hooks/useAuth";
 import { toast } from "react-toastify";
@@ -52,8 +52,8 @@ export default function SettingsPage() {
       </div>
 
       <CustomModal opened={opened} onClose={() => setOpened(false)} title="Edit Profile">
-        <Box sx={{ position: "relative" }}>
-          <LoadingOverlay visible={updateMutation.isLoading} />
+        <div style={{ position: "relative" }}>
+          <LoadingOverlay visible={Boolean((updateMutation as any).isLoading)} />
           <Formik
             enableReinitialize
             initialValues={{
@@ -116,7 +116,7 @@ export default function SettingsPage() {
               </Form>
             )}
           </Formik>
-        </Box>
+        </div>
       </CustomModal>
     </div>
   );

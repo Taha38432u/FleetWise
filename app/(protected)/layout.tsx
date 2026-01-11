@@ -7,18 +7,17 @@ import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 
 function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
+  const [matches, setMatches] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+  );
 
   useEffect(() => {
     const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
 
     const listener = () => setMatches(media.matches);
     media.addEventListener("change", listener);
     return () => media.removeEventListener("change", listener);
-  }, [matches, query]);
+  }, [query]);
 
   return matches;
 }
@@ -48,7 +47,9 @@ export default function ProtectedLayout({
   // Collapse sidebar automatically on mobile
   useEffect(() => {
     if (isMobile) {
-      setSidebarWidth(false);
+      // Defer setState to avoid synchronous state update inside effect
+      const t = setTimeout(() => setSidebarWidth(false), 0);
+      return () => clearTimeout(t);
     }
   }, [isMobile]);
 

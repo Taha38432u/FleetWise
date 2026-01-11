@@ -37,7 +37,7 @@ export const useUpdateMe = () => {
         localStorage.setItem("user", JSON.stringify(data));
       } catch (e) {}
       queryClient.setQueryData(["me"], data);
-      queryClient.invalidateQueries(["me"]);
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 };

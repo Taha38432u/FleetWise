@@ -3,18 +3,17 @@ import { GetMeResponse, UpdateMeDto } from "@/types/auth.types";
 
 const BASE = "auth";
 
-export const getMe = async () => {
-  const response = await makeApiCall<GetMeResponse>({
+export const getMe = async (): Promise<any> => {
+  const response = await makeApiCall<any>({
     method: "GET",
     url: `${BASE}/me`,
   });
 
-  // Return raw response -- caller will normalize either { data: MeUser } or MeUser
   return response;
 };
 
-export const updateMe = async (data: UpdateMeDto) => {
-  const response = await makeApiCall<GetMeResponse>({
+export const updateMe = async (data: UpdateMeDto): Promise<any> => {
+  const response = await makeApiCall<any>({
     method: "PATCH",
     url: `${BASE}/me`,
     data,

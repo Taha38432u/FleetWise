@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Loader, Stack, Text } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 
 export default function Loading() {
   return (
@@ -19,12 +19,12 @@ export default function Loading() {
       role="status"
       aria-live="polite"
     >
-      <Stack align="center" spacing="xs">
+      <div className="flex flex-col items-center gap-2">
         <Loader size={60} variant="dots" color="indigo" aria-hidden />
-        <Text size="lg" weight={700} style={{ lineHeight: 1 }}>
+        <Text size="lg" fw={700} style={{ lineHeight: 1 }}>
           FleetWise
         </Text>
-      </Stack>
+      </div>
     </div>
   );
 }

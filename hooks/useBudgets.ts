@@ -20,7 +20,7 @@ export function useGetBudgets(params?: {
         queryKey: ["budgets", params],
         queryFn: () => getBudgets(params),
         enabled: params?.enabled ?? true,
-        placeholderData: (prevData) => prevData,
+        placeholderData: (prevData: GetApiResponse<Budget> | undefined) => prevData,
     });
 }
 

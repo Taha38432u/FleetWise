@@ -20,7 +20,7 @@ export function useGetGoals(params?: {
         queryKey: ["goals", params],
         queryFn: () => getGoals(params),
         enabled: params?.enabled ?? true,
-        placeholderData: (prevData) => prevData,
+        placeholderData: (prevData: GetApiResponse<Goal> | undefined) => prevData,
     });
 }
 

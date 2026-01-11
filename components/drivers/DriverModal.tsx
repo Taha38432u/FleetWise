@@ -56,14 +56,16 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
   // Fetch detailed driver data by ID
   const { data: driverResponse, isLoading, refetch } = useGetDriver(driver?.id || "");
   const driverData = driverResponse?.data;
-
-  if (!driver) return null;
-
-  // Fetch available vehicles
+  // Fetch available vehicles (hooks must run unconditionally)
   const { data: vehiclesResponse } = useGetVehicles({
     page: 1,
     pageSize: 100,
   });
+
+  const assignMutation = useAssignVehicleToDriver();
+  const unassignMutation = useUnassignVehicleFromDriver();
+
+  if (!driver) return null;
 
   const allVehicles = vehiclesResponse?.data?.data || [];
   const assignedVehicleIds = driverData?.assignedVehicles?.map((v) => v.id) || [];
@@ -72,9 +74,6 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
   const availableVehicles = allVehicles.filter(
     (v) => !assignedVehicleIds.includes(v.id)
   );
-
-  const assignMutation = useAssignVehicleToDriver();
-  const unassignMutation = useUnassignVehicleFromDriver();
 
   const handleAssignVehicle = () => {
     if (!selectedVehicleId) {
@@ -472,7 +471,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
                       onClick={() =>
                         handleUnassignVehicle(vehicle.id)
                       }
-                      loading={unassignMutation.isLoading}
+                      loading={Boolean((unassignMutation as any).isLoading)}
                     >
                       <IconMinus size={18} />
                     </ActionIcon>
@@ -540,7 +539,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
                         );
                       }
                     }}
-                    loading={assignMutation.isLoading}
+                    loading={Boolean((assignMutation as any).isLoading)}
                   >
                     Assign
                   </Button>
@@ -595,7 +594,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
             <Button
               color="red"
               onClick={confirmUnassignVehicle}
-              loading={unassignMutation.isLoading}
+              loading={Boolean((unassignMutation as any).isLoading)}
             >
               Unassign Vehicle
             </Button>

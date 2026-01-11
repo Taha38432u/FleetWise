@@ -16,7 +16,7 @@ export function useGetAccounts(params?: {
     queryKey: ["accounts", params],
     queryFn: () => getAccounts(params),
     enabled: params?.enabled ?? true,
-    placeholderData: (prevData) => prevData,
+    placeholderData: (prevData: GetApiResponse<Account> | undefined) => prevData,
   });
 }
 

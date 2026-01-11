@@ -21,7 +21,7 @@ export function useGetVehicles(params?: {
     queryKey: ["vehicles", params],
     queryFn: () => getVehicles(params),
     enabled: params?.enabled ?? true,
-    placeholderData: (prevData) => prevData,
+    placeholderData: (prevData: GetVehiclesResponse | undefined) => prevData,
   });
 }
 
